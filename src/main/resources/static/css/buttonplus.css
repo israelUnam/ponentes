@@ -1,0 +1,98 @@
+.float-btn {
+    position: fixed;
+    bottom: 90px;
+    /* Ajusta el valor según tu preferencia */
+    right: 20px;
+    /* Ajusta el valor según tu preferencia */
+    z-index: 999;
+}
+
+.float-btn .main-btn {
+    font-size: 1.8rem;
+    z-index: 999;
+}
+
+.float-btn a {
+    display: inline-block;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background-color: #17ac3c;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1.6rem;
+    padding-top: 6px;
+    cursor: pointer;
+    box-shadow: -1px 3px 5px rgba(0, 0, 0, 0.3);
+    transition: 0.2s;
+}
+
+.float-btn.top ul {
+    text-align: center;
+    position: absolute;
+    z-index: 990;
+    right: 0;
+    left: 0;
+    opacity: 0;
+    transition: 0.4s;
+    -webkit-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+    bottom: -60px;
+}
+
+.float-btn.top ul li {
+    margin-bottom: 1rem; /* Space between sub buttons */
+}
+
+.float-btn.top ul li a {
+    width: 42px;
+    height: 42px;
+    padding-top: 1px;
+}
+
+.float-btn.top ul.toggled {
+    opacity: 1;
+    bottom: 60px;
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+}
+
+/* Opens/Closes Left */
+.float-btn.left ul {
+    width: 250px;
+    /* Must define width for horizontal implementations */
+    text-align: center;
+    position: absolute;
+    opacity: 0;
+    right: -100px;
+    bottom: 9px;
+    /* Ensure this matches the toggled version of this class below */
+    transition: 0.4s;
+    -webkit-transform: scale(0);
+    -ms-transform: scale(0);
+    transform: scale(0);
+}
+
+.float-btn.left ul li {
+    margin-right: 1rem;/* Space between sub buttons */ 
+    margin-bottom: 0;
+    display: inline-block;
+}
+
+.float-btn.left ul li a {
+    width: 42px;
+    height: 42px;
+    padding-top: 8px;
+}
+
+.float-btn.left ul.toggled {
+    opacity: 1;
+    right: 60px;
+    bottom: 9px;
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+}

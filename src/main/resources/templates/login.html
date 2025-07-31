@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Iniciar sesión | Gestor de Proyectos</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <style>
+        body {
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(60,60,120,0.15);
+            padding: 40px 32px 32px 32px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        .login-container h1 {
+            color: #3a7bd5;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .login-container p {
+            color: #555;
+            margin-bottom: 2rem;
+        }
+        .google-btn {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+            margin: 0 auto 1.5rem auto;
+        }
+        .google-btn:hover {
+            box-shadow: 0 2px 8px rgba(60,60,120,0.10);
+        }
+        .change-account {
+            margin-top: 1.5rem;
+            font-size: 0.98rem;
+            color: #888;
+        }
+        .change-account a {
+            color: #3a7bd5;
+            text-decoration: underline;
+        }
+        .login-icon {
+            font-size: 2.5rem;
+            color: #3a7bd5;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-icon">
+            <i class="fas fa-clipboard-list"></i>
+        </div>
+        <h1>Gestor de Proyectos</h1>
+        <p>Accede con tu cuenta de Google para gestionar, organizar y supervisar tus proyectos de manera eficiente.</p>
+        <a href="/oauth2/authorization/google" class="google-btn">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:24px; height:24px;">
+            Iniciar sesión con Google
+        </a>
+        <div class="change-account">
+            <strong>¿Quieres cambiar de cuenta?</strong><br>
+            Cierra sesión <a href="/logout">aquí</a> y vuelve a iniciar sesión con otra cuenta de Google.
+        </div>
+    </div>
+</body>
+</html>

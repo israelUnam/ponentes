@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <title>Inicio - Universidad Nacional Autónoma de México</title>
+    <link rel="icon" type="image/x-icon" href="/images/cropped-favicon-1-150x150.jpg" />
+    <headers th:replace="~{components/headers.html :: ~{_headers}}" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+    <script	src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>    
+</head>
+
+<body>
+    <nav th:replace="~{components/nav.html :: ~{_nav}}" />
+    <!-- Page Header-->
+    <header class="masthead" style="background-image: url('/images/home-bg.jpg')">
+        <div class="container titulo position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-12 col-xl-10">
+                    <div class="site-heading">
+                        <p class="titulo-header">4.<sup>o</sup> Congreso Internacional en Evaluación y Dirección Ética de Proyectos Públicos y Sociales </p>
+                        <span class="subheading">Ponentes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content-->
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <!-- Post preview-->
+
+                <div>
+                    <div class="post-preview" >
+                        <h2 class="post-title">Incripción</h2>      
+                        <p>Fecha del evento: AA,BB y CC de noviembre del 2025</p> 
+                        <p>Fecha límite de inscripción y recepción de trabajos: XX de MES del 2025</p>
+                        <p>Evento en línea.</p>
+                        <p>En caso de dudas o comentarios el correo de contacto es: congresoetica@aragon.unam.mx</p>
+
+                    </div>
+                    <hr class="my-4" /> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer-->
+    <foot th:replace="~{components/footer.html :: ~{_footer}}">
+    </foot>
+    
+</body>
+
+</html>
