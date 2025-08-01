@@ -1,0 +1,37 @@
+{"properties": [
+  {
+    "name": "app.produccion",
+    "type": "java.lang.String",
+    "description": "A description for 'app.produccion'"
+  },
+  {
+    "name": "app.comite",
+    "type": "java.lang.String",
+    "description": "A description for 'app.comite'"
+  },
+  {
+    "name": "app.siglas",
+    "type": "java.lang.String",
+    "description": "A description for 'app.siglas'"
+  },
+  {
+    "name": "app.facultad",
+    "type": "java.lang.String",
+    "description": "A description for 'app.facultad'"
+  },
+  {
+    "name": "app.paginacomite",
+    "type": "java.lang.String",
+    "description": "A description for 'app.paginacomite'"
+  },
+  {
+    "name": "app.paginasistema",
+    "type": "java.lang.String",
+    "description": "A description for 'app.paginasistema'"
+  },
+  {
+    "name": "app.correo",
+    "type": "java.lang.String",
+    "description": "A description for 'app.correo'"
+  }
+]}

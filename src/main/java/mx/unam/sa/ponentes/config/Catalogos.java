@@ -41,7 +41,8 @@ public class Catalogos {
         System.out.println("Catálogos creados.");
     }
 
-    private void alta_authorities() {
+    @SuppressWarnings("unused")
+private void alta_authorities() {
         authorityRepository.save(new Authority("ROLE_ADMIN"));
     }
 
@@ -67,8 +68,10 @@ public class Catalogos {
         System.out.println("Creando cuestionario...");
 
         CatTipoPregunta catTexto = catTipoPreguntaRepository.findById(1).get();
+        @SuppressWarnings("unused")
         CatTipoPregunta catMultiple = catTipoPreguntaRepository.findById(2).get();
         CatTipoPregunta catUna = catTipoPreguntaRepository.findById(3).get();
+        @SuppressWarnings("unused")
         CatTipoPregunta catSinResp = catTipoPreguntaRepository.findById(4).get();
         CatTipoPregunta catArchivo = catTipoPreguntaRepository.findById(5).get();
         CatTipoPregunta catSi = catTipoPreguntaRepository.findById(6).get();
@@ -77,9 +80,9 @@ public class Catalogos {
         // crear cuetionarios propios
 
         Cuestionario cuestionario = new Cuestionario(null,
-                "4.o CODEP UNAM",
-                "Inscripción de Ponentes",
-                "Formulario de inscripción para ponentes del 4.o CODEP UNAM",
+                "Conferencia",
+                "Inscripción de conferencistas",
+                "Formulario de inscripción para conferencia",
                 "CP");
 
         // Preguntas y respuestas Tema 1
@@ -190,31 +193,62 @@ public class Catalogos {
 
         
         Tema tema2 = new Tema(null, "<a href=\"https://www.congreso-unam.org/aviso-de-privacidad\">Aviso de privacidad <a> y cesión de derechos", cuestionario, 2);
-        CatPregunta t2_catPregunta1 = new CatPregunta(null, "¿Ha leído y acepta el aviso de privacidad?", "",
+        
+        CatPregunta t2_catPregunta1 = new CatPregunta(null, "¿Ha leído y acepta el aviso de privacidad?", 
+        "Acepte la condición para continuar con el registro.",
                 catSi, tema2, true, 13);
-
         t2_catPregunta1.getCatContenido()
-                .add(new CatContenido(null, t2_catPregunta1, "SI", false, 0));
-
+                .add(new CatContenido(null, t2_catPregunta1, "SI", false, 1));
         tema2.getCatPreguntas()
                 .add(t2_catPregunta1);
+
+        CatPregunta t2_catPregunta2 = new CatPregunta(null, "¿Ha leído y acepta la <a href=\"https://docs.google.com/document/d/1rxiEtVsHvW78kC-C1ClYKk4SOPD1m6lNz7OBHZtvf4o/edit?usp=sharing\">Carta de Cesión de Derechos </a>?", 
+        "Acepte la condición para continuar con el registro.",
+                catSi, tema2, true, 13);
+        t2_catPregunta2.getCatContenido()
+                .add(new CatContenido(null, t2_catPregunta2, "SI", false, 2));
+        tema2.getCatPreguntas()
+                .add(t2_catPregunta2);
+
+        CatPregunta t2_catPregunta3 = new CatPregunta(null, "Carta de Cesión de Derechos",
+                " En esta sección deberá adjuntar su carta. "
+                        + "El documentos deberá de cumplir con los siguientes lineamientos al nombrar al archivo:"
+                        + "Para el archivo extensión “.PDF” nombrado del archivo con la siguiente nomenclatura: "
+                        + "En caso de haber más de un participante, agregar una carta por cada uno de ellos en un solo documento."
+                        + "codep4_CartaCesion_[ddmmaa]_[apellido paterno_responsable].docx",
+                catArchivo, tema2, true, 3);
+
+        t2_catPregunta3.getCatContenido()
+                .add(new CatContenido(null, t2_catPregunta3, "Archivo",
+                        false, 0));
+
+
 
         cuestionario.getTemas().add(tema2);
 
         Tema tema3 = new Tema(null, "Carga de documentos", cuestionario, 3);
 
         CatPregunta t3_catPregunta1 = new CatPregunta(null, "Trabajo principal",
-                " En esta sección deberá adjuntar su trabajo para participar. Tamaño máximo del archivo 10MB."
-                        + "Los documentosdeberán de cumplir con los siguientes lineamientos al nombrar al archivo:"
+                " En esta sección deberá adjuntar su trabajo para participar. Tamaño máximo del archivo 10MB. "
+                        + "El documento deberá de cumplir con los siguientes lineamientos al nombrar al archivo:"
                         + "Para el archivo, Word extensión “.docx” nombrado del archivo con la siguiente nomenclatura: "
                         + "codep4_[modalidad]_[ddmmaa]_[apellido paterno].docx",
                 catArchivo, tema3, true, 1);
-
         t3_catPregunta1.getCatContenido()
                 .add(new CatContenido(null, t3_catPregunta1, "Archivo",
                         false, 0));
-
         tema3.getCatPreguntas().add(t3_catPregunta1);
+
+        CatPregunta t3_catPregunta2 = new CatPregunta(null, "Presentación en PowerPoint",
+                " En esta sección deberá adjuntar su trabajo para participar. Tamaño máximo del archivo 10MB. "
+                        + "El documento deberá de cumplir con los siguientes lineamientos al nombrar al archivo:"
+                        + "Para el archivo, PowerPont extensión “.pptx” nombrado del archivo con la siguiente nomenclatura: "
+                        + "codep4_[modalidad]_[ddmmaa]_[apellido paterno].pptx”",
+                catArchivo, tema3, true, 1);
+        t3_catPregunta2.getCatContenido()
+                .add(new CatContenido(null, t3_catPregunta2, "Archivo",
+                        false, 0));
+        tema3.getCatPreguntas().add(t3_catPregunta2);
 
         cuestionario.getTemas().add(tema3);
 

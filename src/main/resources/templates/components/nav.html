@@ -1,5 +1,5 @@
 <!-- Navigation-->
-<nav th:fragment="_nav" class="navbar navbar-expand-lg navbar-light py-0" id="mainNav">
+<nav th:fragment="_nav" class="navbar navbar-expand-lg navbar-dark py-2" id="mainNav">
     <div class="container px-4 px-lg-5">
         <img src="/images/escudo-unam-blanco.png" style="width: 60px; margin-right: 10px;"><span
             style="color: aliceblue;"> Universidad
@@ -12,29 +12,21 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
 
 
-            <ul class="navbar-nav ms-auto py-4 py-lg-0">
+            <ul class="navbar-nav ms-auto py-4 py-lg-0 ">
                 <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/">Inicio </a></li>
-
-                <li class="nav-item" th:if="${rolAdmin} == true OR ${rolModera} == true  "><a class="nav-link px-lg-3 py-3 py-lg-4"
-                    href="/evalua/listcuestionarios">Evaluadores</a>
-            </li>
-
-                <li class="nav-item" th:if="${rolAdmin}"><a class="nav-link px-lg-3 py-3 py-lg-4"
-                        href="/admin/listUsers">Administración</a>
-                </li>
-
                 <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/contact">Contacto</a>
+                </li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/contact">Cerrar Sesión</a>
                 </li>
             </ul>
 
-            <div class="d-grid justify-content-end ms-5">
-                <p class=" mb-0" style="display: inline-block; margin-right: 10px; color: aliceblue; font-size:0.7em	">
-                    <span style="font-weight:bold">Usuario:</span> <span th:text="${usuario}"></span><br>
-                <form th:action="@{/logout}" method="post">
-                    <input style="font-size: 14px;" type="submit" value="Cerrar Sesión" />
-                </form>
+            <div class="d-grid justify-lg-content-end ms-lg-5">
+                <p class=" mt-0 mb-0" style="display: inline-block; margin-right: 10px; color: aliceblue; font-size:0.7em	">
+                    <span style="font-weight:bold">Usuario:</span> <span th:text="${name}"> </span> <br/></span> <span th:text="${email}"></span>
                 </p>
             </div>
+                                <img class="ms-4 mt-1" th:src="${picture}" style="border-radius: 50px; width: 60px;" />
+
         </div>
 
     </div>
