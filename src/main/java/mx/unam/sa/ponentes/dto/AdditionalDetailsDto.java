@@ -1,10 +1,10 @@
 package mx.unam.sa.ponentes.dto;
 
-import mx.unam.sa.ponentes.entity.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mx.unam.sa.ponentes.models.Authority;
 
 @Data
 @NoArgsConstructor

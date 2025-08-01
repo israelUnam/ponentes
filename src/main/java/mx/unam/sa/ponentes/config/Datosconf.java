@@ -17,6 +17,7 @@ public class Datosconf {
     private String paginamanual;
     private String correo;
     private String paginasistema;
+    private String avisoprivacidad;
 
     public boolean isProduccion() {
         return produccion;
@@ -84,6 +85,14 @@ public class Datosconf {
 
     public void setPaginasistema(String paginasistema) {
         this.paginasistema = paginasistema;
+    }
+
+    public String getAvisoprivacidad() {
+        return avisoprivacidad;
+    }
+
+    public void setAvisoprivacidad(String avisoprivacidad) {
+        this.avisoprivacidad = avisoprivacidad;
     }
 }
 

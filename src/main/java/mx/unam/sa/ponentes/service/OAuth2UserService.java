@@ -12,9 +12,9 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import mx.unam.sa.ponentes.dto.AdditionalDetailsDto;
 import mx.unam.sa.ponentes.dto.Oauth2UserInfoDto;
-import mx.unam.sa.ponentes.entity.Authority;
-import mx.unam.sa.ponentes.entity.User;
-import mx.unam.sa.ponentes.entity.UserPrincipal;
+import mx.unam.sa.ponentes.models.Authority;
+import mx.unam.sa.ponentes.models.User;
+import mx.unam.sa.ponentes.models.UserPrincipal;
 import mx.unam.sa.ponentes.repository.AuthorityRepository;
 import mx.unam.sa.ponentes.repository.UserRepository;
 

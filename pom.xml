@@ -10,7 +10,7 @@
     </parent>
     <groupId>mx.unam.sa</groupId>
     <artifactId>ponentes</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.3.3-SNAPSHOT</version>
     <name>ponentes</name>
     <description>Inscripción de ponentes con google Auth</description>
     <url/>

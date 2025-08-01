@@ -1,4 +1,4 @@
-package  mx.unam.sa.ponentes.dto.cuestionarios;
+package  mx.unam.sa.ponentes.dto;
 
 import lombok.Getter;
 import lombok.Setter;

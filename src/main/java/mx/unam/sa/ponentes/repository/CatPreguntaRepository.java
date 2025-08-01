@@ -1,8 +1,9 @@
-package mx.unam.sa.ponentes.repository.cuestionarios;
+package mx.unam.sa.ponentes.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import mx.unam.sa.ponentes.entity.cuestionarios.CatPregunta;
+
+import mx.unam.sa.ponentes.models.CatPregunta;
 
 
 @Repository

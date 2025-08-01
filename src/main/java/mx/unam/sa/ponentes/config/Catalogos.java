@@ -4,15 +4,15 @@ import org.springframework.context.annotation.Configuration;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import mx.unam.sa.ponentes.entity.Authority;
-import mx.unam.sa.ponentes.entity.cuestionarios.CatContenido;
-import mx.unam.sa.ponentes.entity.cuestionarios.CatPregunta;
-import mx.unam.sa.ponentes.entity.cuestionarios.CatTipoPregunta;
-import mx.unam.sa.ponentes.entity.cuestionarios.Cuestionario;
-import mx.unam.sa.ponentes.entity.cuestionarios.Tema;
+import mx.unam.sa.ponentes.models.Authority;
+import mx.unam.sa.ponentes.models.CatContenido;
+import mx.unam.sa.ponentes.models.CatPregunta;
+import mx.unam.sa.ponentes.models.CatTipoPregunta;
+import mx.unam.sa.ponentes.models.Cuestionario;
+import mx.unam.sa.ponentes.models.Tema;
 import mx.unam.sa.ponentes.repository.AuthorityRepository;
-import mx.unam.sa.ponentes.repository.cuestionarios.CatTipoPreguntaRepository;
-import mx.unam.sa.ponentes.repository.cuestionarios.CuestionarioRepository;
+import mx.unam.sa.ponentes.repository.CatTipoPreguntaRepository;
+import mx.unam.sa.ponentes.repository.CuestionarioRepository;
 
 @Configuration
 public class Catalogos {
@@ -37,7 +37,7 @@ public class Catalogos {
         // En caso contrario llena los datos básicos
         // alta_authorities();
         // catTipoPregunta();
-        cuestionario();
+        //cuestionario();
         System.out.println("Catálogos creados.");
     }
 

@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <style>
         body {
-            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            background: linear-gradient(135deg, #7d6648 0%, #bfa77a 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: 'Roboto', Arial, Helvetica, sans-serif;
         }
         .login-container {
             background: #fff;
@@ -24,7 +25,7 @@
             text-align: center;
         }
         .login-container h1 {
-            color: #3a7bd5;
+            color: #003f97;
             font-size: 2.2rem;
             margin-bottom: 0.5rem;
         }
@@ -69,10 +70,10 @@
 <body>
     <div class="login-container">
         <div class="login-icon">
-            <i class="fas fa-clipboard-list"></i>
+            <img src="/images/logo_col_nobord_codep@4x .png" alt="Logo codep" style="width: 50px; height: 50px;">
         </div>
-        <h1>Gestor de Proyectos</h1>
-        <p>Accede con tu cuenta de Google para gestionar, organizar y supervisar tus proyectos de manera eficiente.</p>
+        <h1 th:utext="${facultad}"></h1>
+        <p>Accede con tu cuenta de Google para gestionar, organizar y supervisar tus participaciones de manera eficiente.</p>
         <a href="/oauth2/authorization/google" class="google-btn">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:24px; height:24px;">
             Iniciar sesión con Google

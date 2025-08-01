@@ -1,4 +1,4 @@
-package  mx.unam.sa.ponentes.entity.cuestionarios;
+package  mx.unam.sa.ponentes.models;
 
 import java.util.List;
 

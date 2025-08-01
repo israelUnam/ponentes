@@ -20,23 +20,32 @@ import lombok.extern.slf4j.Slf4j;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService;
-    private final CustomOauth2SuccessHandler CustomOauth2SuccessHandler;
+        private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService;
+        private final CustomOauth2SuccessHandler CustomOauth2SuccessHandler;
+        private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        log.trace("Configuring http filterChain");
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/js/**", "/images/**").permitAll()
-                        .anyRequest().authenticated())
-                .oauth2Login(
-                        oauth2 -> oauth2.userInfoEndpoint(infoEndpoint -> infoEndpoint.userService(oAuth2UserService))
-                                .successHandler(CustomOauth2SuccessHandler)
-                                .loginPage("/login"));
-        return http.build();
-    }
-
-   
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                log.trace("Configuring http filterChain");
+                http
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/login", "/css/**", "/js/**", "/images/**")
+                                                .permitAll()
+                                                .anyRequest().authenticated())
+                                .oauth2Login(
+                                                oauth2 -> oauth2.userInfoEndpoint(infoEndpoint -> infoEndpoint
+                                                                .userService(oAuth2UserService))
+                                                                .successHandler(CustomOauth2SuccessHandler)
+                                                                .loginPage("/login"))
+                                .logout(logout -> logout
+                                                .logoutSuccessUrl("/login??logout")
+                                                .logoutSuccessHandler(customLogoutSuccessHandler)
+                                                .logoutRequestMatcher(
+                                                                request -> "/logout".equals(request.getRequestURI()) &&
+                                                                                "GET".equalsIgnoreCase(
+                                                                                                request.getMethod()))
+                                                .permitAll());
+                return http.build();
+        }
 
 }

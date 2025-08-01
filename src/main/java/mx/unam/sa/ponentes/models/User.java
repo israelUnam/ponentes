@@ -1,4 +1,4 @@
-package mx.unam.sa.ponentes.entity;
+package mx.unam.sa.ponentes.models;
 
 
 import jakarta.persistence.*;
