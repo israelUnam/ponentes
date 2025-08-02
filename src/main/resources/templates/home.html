@@ -39,13 +39,14 @@
                 <h2 class="post-title">Seleccione la modalidad de participación</h2>      
                 <hr class="my-4" /> 
 
-                <div>
+                <div th:each="cuestionarios : ${cuestionarios}">
                     <div class="post-preview" >
-                        <h3 class="post-title">Incripción</h3>      
-                        <p>Fecha del evento: AA,BB y CC de noviembre del 2025</p> 
-                        <p>Fecha límite de inscripción y recepción de trabajos: XX de MES del 2025</p>
-                        <p>Evento en línea.</p>
-                        <p>En caso de dudas o comentarios el correo de contacto es: congresoetica@aragon.unam.mx</p>
+                        <a th:href="@{'/cuestionario/inicial?idCuest=' + ${cuestionarios.parametros}}">
+                        <h2 class="post-title" th:text="${cuestionarios.titulo}"></h2>
+                        <h3 class="post-subtitle" th:text="${cuestionarios.subtitulo}"> </h3></a>
+
+                        <span  th:if="${cuestionarios.totalNotificaciones} > 0"><a th:href="@{'/notificaciones/notifica?param=' + ${cuestionarios.parametros}}">Ver notificaciones anteriores <i class="bi bi-clock-fill" style="color:  rgb(12, 53, 124);"></i> </small></a>(<span th:text="${cuestionarios.totalNotificaciones}"></span>)</a></span>
+                        <small  th:if="${cuestionarios.totalNotificaciones} == 0"><a th:href="@{'/notificaciones/notifica?param=' + ${cuestionarios.parametros}}">Ver notificaciones anteriores </a><i class="bi bi-clock"></i></small>
 
                     </div>
                     <hr class="my-4" /> 
