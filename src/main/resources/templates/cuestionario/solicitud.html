@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta th:name="_csrf" th:content="${_csrf.token}" />
+    <title>Cuestionarios - Universidad Nacional Autónoma de México</title>
+    <link rel="icon" type="image/x-icon" href="/images/cropped-favicon-1-150x150.jpg" />
+    <headers th:replace="~{components/headers.html :: ~{_headers}}" />
+    <script	src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>    
+</head>
+<body id="cabecera">
+    <nav th:replace="~{components/nav.html :: ~{_nav}}" />
+    <!-- Page Header-->
+    <header class="masthead" style="height: 80px;">
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-2">
+                <h2 class="post-title" th:text="${cuestionario.titulo}"> </h2>
+                <h3 class="post-subtitle" th:text="${cuestionario.subtitulo}"> </h3>
+            </div>
+
+            <div class="alert alert-danger d-flex align-items-center" role="alert" th:if="${fallo}">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                <div>
+                  <span th:text="${mensaje}"></span>
+                </div>
+              </div>
+        </div>            
+
+        <div class="container">
+            <form th:action="@{'/cuestionario/guardasolicitud'}" method="post" th:id="form_Solicitud"  enctype="multipart/form-data" onsubmit="return previo_submit();" >
+            <input type="hidden" th:name="idCuestionario" th:value="${idCuestionario}">
+            <div th:each="pregunta, indice :${preguntas}">
+                <div class="post-preview" >
+
+                    <p class="post-meta titulo-tema" th:if="${indice.index == 0 || pregunta.getDescTema != preguntas[indice.index-1].getDescTema} "><span th:text="${pregunta.getDescTema}"></span></p>
+
+                        <div class="mb-3" th:if="${pregunta.getDesCatalogo} == 'Texto'">
+                            <strong><label class="form-label"  th:text="${pregunta.getDesPregunta}"></label></strong>
+                            <input th:id="@{'text_' + ${pregunta.getIdPregunta}}" th:name="@{'text_' + ${pregunta.getIdPregunta}}"  type="text" class="form-control"  minlength="3" maxlength="300"  th:value="${pregunta.getRespuesta}" required="required" th:if="${pregunta.required == 'required'}" >
+                            <input th:id="@{'text_' + ${pregunta.getIdPregunta}}" th:name="@{'text_' + ${pregunta.getIdPregunta}}"  type="text" class="form-control"  minlength="3" maxlength="300"  th:value="${pregunta.getRespuesta}" th:if="${pregunta.required != 'required'}" >
+                            <label th:for="@{'text_' + ${pregunta.getIdPregunta}}"><small class="form-text" th:text="${pregunta.getObservaciones}" >  </small></label>
+                            <div class="invalid-feedback">
+                                Por favor, ingrese los datos. 
+                            </div>
+                        </div>
+
+                        <div class="mb-3" th:if="${pregunta.getDesCatalogo} == 'Multiple'">
+                            <strong><p th:if="${pregunta.getIdPregunta != preguntas[indice.index-1].getIdPregunta}" th:text="${pregunta.getDesPregunta}" th:id="@{'preg_' + ${pregunta.getIdPregunta}}"></p></strong>       
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" th:name="@{'chk_' + ${pregunta.getIdPregunta}  }" th:id="@{'chkCtl_' + ${pregunta.getIdPregunta} + '_' + ${pregunta.getIdContenido} }" th:onclick="setMultiple([[${pregunta.getIdPregunta}]],[[${pregunta.getIdContenido}]],[[${pregunta.otro}]])" checked th:if="${pregunta.getRespuesta} == '1'" >
+                                <input class="form-check-input" type="checkbox" th:name="@{'chk_' + ${pregunta.getIdPregunta}  }" th:id="@{'chkCtl_' + ${pregunta.getIdPregunta} + '_' + ${pregunta.getIdContenido} }" th:onclick="setMultiple([[${pregunta.getIdPregunta}]],[[${pregunta.getIdContenido}]],[[${pregunta.otro}]])" th:if="${pregunta.getRespuesta} == '0'" >
+
+                                <input type="hidden"  th:id="@{'chk_' + ${pregunta.getIdPregunta} + '_' + ${pregunta.getIdContenido} }"   th:name="@{'chk_' + ${pregunta.getIdPregunta} + '_' + ${pregunta.getIdContenido} }" th:value="${pregunta.getRespuesta}" >
+                                <label class="form-check-label" th:text="${pregunta.getDesContenido}"></label>
+                                <input type="text" class="form-control"  minlength="3" maxlength="500" th:if="${pregunta.otro}" th:id="@{'otro_' + ${pregunta.getIdPregunta} + '_' + ${pregunta.getIdContenido}}" th:name="@{'otro_' + ${pregunta.getIdPregunta} + '_' + ${pregunta.getIdContenido}}" disabled th:value="${pregunta.getResp_adicional}">
+                                <label th:for="@{'otro_' + ${pregunta.getIdPregunta} + '_' + ${pregunta.getIdContenido}}" th:if="${pregunta.otro}"><small class="form-text">Hasta 300 caracteres</small></label>
+                            </div>
+                        </div>    
+                            
+                        <div class="mb-3" th:if="${pregunta.getDesCatalogo} == 'Una'">
+                            <strong><p th:if="${pregunta.getIdPregunta != preguntas[indice.index-1].getIdPregunta}" th:text="${pregunta.getDesPregunta}" th:id="@{'preg_' + ${pregunta.getIdPregunta}}"></p></strong> 
+                            <input type="hidden"  th:id="@{'optResp_' + ${pregunta.getIdPregunta}}"   th:name="@{'optResp_' + ${pregunta.getIdPregunta}}" th:value="${pregunta.getRespuesta}" > 
+
+                            <input class="form-check-input" type="radio" th:name="@{'opt_' + ${pregunta.getIdPregunta}  }" th:onclick="setUnico([[@{${pregunta.getIdPregunta}}]],[[@{${pregunta.getIdContenido}}]],[[${pregunta.otro}]])" th:id="@{'opt_' + ${pregunta.getIdPregunta} + '_'  + ${pregunta.getIdContenido}}"  checked th:if="${pregunta.getRespuesta} == '1'" required >
+                            <input class="form-check-input" type="radio" th:name="@{'opt_' + ${pregunta.getIdPregunta} }"  th:onclick="setUnico([[@{${pregunta.getIdPregunta}}]],[[@{${pregunta.getIdContenido}}]],[[${pregunta.otro}]])" th:id="@{'opt_' + ${pregunta.getIdPregunta} + '_'  + ${pregunta.getIdContenido}}" th:if="${pregunta.getRespuesta} == '0'" required >
+                                                       
+                            <label class="form-check-label"  th:text="${pregunta.getDesContenido}"></label> 
+                            <input type="text" class="form-control"  minlength="3" maxlength="500" th:if="${pregunta.otro}" th:id="@{'optotro_' + ${pregunta.getIdPregunta} + '_' + ${pregunta.getIdContenido}}" th:name="@{'optotro_' + ${pregunta.getIdPregunta} + '_' + ${pregunta.getIdContenido}}" disabled th:value="${pregunta.getResp_adicional}">
+                        </div>
+
+                        <div class="mb-3" th:if="${pregunta.getDesCatalogo} == 'Sin respuesta'">
+                            <strong><label class="form-label"  th:text="${pregunta.getDesPregunta}"></label></strong>
+                        </div>
+
+                        <div class="mb-3" th:if="${pregunta.getDesCatalogo} == 'SI'">
+                            <input class="form-check-input" type="checkbox" th:name="@{'chk_' + ${pregunta.getIdPregunta}  }" required  >
+                            <strong><label class="form-label"  th:text="${pregunta.getDesPregunta}"></label></strong>
+                            <p><small><span th:utext="${pregunta.getObservaciones}" ></span></small></p>
+                        </div>
+
+                        <div class="mb-3" th:if="${pregunta.getDesCatalogo} == 'Archivo'">
+                            <strong><label class="form-label"  th:text="${pregunta.getDesPregunta}"></label> </strong>
+                            <input  th:id="@{'file_' + ${pregunta.getIdPregunta}}" type="file" name="files" accept=".pdf,.doc,.docx" required  th:if="${pregunta.required == 'required'}"/>
+                            <input  th:id="@{'file_' + ${pregunta.getIdPregunta}}" type="file" name="files" accept=".pdf,.doc,.docx"  th:if="${pregunta.required != 'required'}"/>
+                            <p><small><span th:text="${pregunta.getObservaciones}" ></span></small></p>
+                            <label th:id="@{'descfile_' + ${pregunta.getIdPregunta}}">
+                           </label>
+
+                            <script>
+                                document.getElementById("[[@{'file_' + ${pregunta.getIdPregunta}}]]").addEventListener('change', function (e){
+                                     if (['pdf', 'doc', 'docx', 'ppt', 'pptx'].includes(ext)) {
+                                        // Es PDF, Word o PowerPoint
+                                        if (ext === 'pdf') {
+                                            content = "Formato:  <i class='bi bi-file-earmark-pdf'></i> PDF <i class='bi bi-check-circle'  style='color: rgb(7, 92, 56);'></i>  </small>";
+                                        } else if (ext === 'doc' || ext === 'docx') {
+                                            content = "Formato:  <i class='bi bi-file-earmark-word'></i> Word <i class='bi bi-check-circle'  style='color: rgb(7, 92, 56);'></i>  </small>";
+                                        } else {
+                                            content = "Formato:  <i class='bi bi-file-earmark-ppt'></i> PowerPoint <i class='bi bi-check-circle'  style='color: rgb(7, 92, 56);'></i>  </small>";
+                                        }
+                                    } else {
+                                        content = "Formato: " + ext + " <i class='bi bi-x-circle'   style='color: red;'></i>  </small>";
+                                    }
+                                    if (e.target.files[0].size  < 10000000){
+                                        content += "Tamaño: " + e.target.files[0].size + " bytes <i class='bi bi-check-circle'  style='color: rgb(7, 92, 56);'></i>  </small>";
+                                    }else{
+                                        content += "Tamaño: " + e.target.files[0].size + " bytes <i class='bi bi-x-circle'   style='color: red;'></i> No cumple con el tamaño máximo  </small>";
+                                    }
+                                    content + "</small>";
+                                    document.getElementById("[[@{'descfile_' + ${pregunta.getIdPregunta}}]]").innerHTML = content ;
+                                });
+                            </script>
+                            <hr>
+                        </div>
+
+
+                </div>
+
+            </div>
+            <div class="mb-3" style="text-align: center;">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+
+            </form>
+
+            <input type="hidden" id="checks_Required" th:value="${checks_Required}">
+            <div class="alert alert-danger" role="alert" style="display: none;" id="div_final">
+                A simple dark alert—check it out!
+            </div>
+        </div>
+
+    <!-- Footer-->
+    <foot th:replace="~{components/footer.html :: ~{_footer}}" />
+    <script>
+        function setMultiple(idPregunta, getIdContenido, isOtro){
+            //console.log("setMultiple: " + idPregunta + "_" + getIdContenido + " isOtro: " + isOtro) ;
+            var chk = document.getElementById("chk_" + idPregunta + "_" + getIdContenido);
+            if (chk.value == 1){
+                chk.value = 0;
+            }else{
+                chk.value = 1;
+            }
+
+            if(isOtro){
+                //console.log("Acción de otro multiple");
+                var otro = document.getElementById("otro_" + idPregunta + "_" + getIdContenido);
+                if (chk.value == 1){
+                    otro.disabled = false;
+                }else{
+                    var txtotros = document.getElementsByName("otro_" + idPregunta + "_" + getIdContenido);
+                    otro.value = "";
+                    otro.disabled = true;
+                }
+            }
+
+         }
+
+        function setUnico(idPregunta, getIdContenido, isOtro){
+            console.log("setUnico: " + idPregunta + "_" + getIdContenido + " isOtro: " + isOtro) ;
+
+            //Requerido para enviar el valor al servicio de guardado
+            var opt = document.getElementById("optResp_" + idPregunta);
+            opt.value = getIdContenido;
+
+            //Desactivar otros elementos
+            var otros = document.querySelectorAll("[id^='optotro_" + idPregunta + "']");
+            for (var i = 0; i < otros.length; i++) {
+                otros[i].value = "";
+                otros[i].disabled = true;
+            }
+
+            if(isOtro){
+                console.log("Acción de otro respuesta unica");
+                var unico = document.getElementById("optotro_" + idPregunta + "_" + getIdContenido);
+                unico.disabled = false;
+            }
+         }
+
+
+        function previo_submit(){
+            console.log("previo_submit");
+
+            document.getElementById("div_final").style.display = "none";
+
+            //Verifica que se haya seleccionado una opción en las preguntas con múltiples opciones (ckechbox)
+            var checks = document.getElementById("checks_Required").value;
+            var arrChecks = checks.split(",");
+            //console.log("checks" + checks);
+
+            //01 Verifica que al menos una opción este seleccionadapor cada sección de checkbox que sea obligatoria, sino arrChecks no lo contien
+            for (let i = 0; i < arrChecks.length; i++) {
+                var chk = document.getElementsByName(arrChecks[i]);
+                if (chk.length > 0){
+                    var checked = false;
+                    for (let j = 0; j < chk.length; j++) {
+                        if (chk[j].checked) {
+                            checked = true;
+                        }
+                    }
+                    if (!checked){
+                        var pregunta = arrChecks[i].split("_")[1];
+                        var desPreg = document.getElementById("preg_" + pregunta).innerText;
+                        document.getElementById("div_final").style.display = "block";
+                        document.getElementById("div_final").innerHTML = "Por favor, seleccione una opción en la pregunta: " + desPreg;
+                        return false;
+                    }
+                }
+            }
+
+            //02 Verifica que se haya ingresado un valor en las preguntas con opción de otro en ckeckbox
+            var chk_otros = document.querySelectorAll("[id^='otro_']");
+            //console.log("chk_otro: ", chk_otros.length);
+
+            for (let i = 0; i < chk_otros.length; i++) {
+                //console.log("chk_otros[i]: " + chk_otros[i].id);
+                var pregunta = chk_otros[i].id.split("_")[1];
+                var contenido = chk_otros[i].id.split("_")[2];
+
+                var chk = document.getElementById("chkCtl_" + pregunta + "_" + contenido);
+
+                 if (chk.checked){
+                     //console.log("chk checked: " + chk.id);
+                     var contenido = document.getElementById("otro_" + pregunta + "_" + contenido);
+                     if (contenido.value.length < 3){
+                         var desPreg = document.getElementById("preg_" + pregunta).innerText;
+                         document.getElementById("div_final").style.display = "block";
+                         document.getElementById("div_final").innerHTML = "Por favor, ingrese un valor en la selección \"OTRO\" en la pregunta " + desPreg + " con longitud mayor a 3 caracteres.";
+                         return false;
+                     }
+                 }else{
+                     //console.log("chk not checked: " + chk.id);
+                 }
+            }
+
+            //verifica que se haya puesto valor en la sección de opt_otros
+            //como cada opcion es única, se verifica que se haya puesto un valor en la sección de opt_otros, no es necesario revisar por arreglo
+
+            console.log("\n***verifica otros_");
+            var opt_otros = document.querySelectorAll("[id^='optotro_']");
+            //console.log("elmentos optotro_: " + opt_otros.length);
+
+            for (let i = 0; i < opt_otros.length; i++) {
+                //console.log("opt_otros[i]: " + opt_otros[i].id);
+                var pregunta =  opt_otros[i].id.split("_")[1];
+                var contenido =    opt_otros[i].id.split("_")[2];
+                var opt = document.getElementById("opt_" +pregunta + "_" + contenido);
+
+                if (opt.checked){
+                    //console.log("opt checked: " + "opt_" +pregunta + "_" + contenido);
+                    var desPreg = document.getElementById("preg_" + pregunta).innerText;
+                    var textOtro = document.getElementById("optotro_" + pregunta + "_" + contenido);
+
+                    if (textOtro.value.length < 3){
+                        document.getElementById("div_final").style.display = "block";
+                        document.getElementById("div_final").innerHTML = "Por favor, ingrese un valor en la selección \"OTRO\" en la pregunta " + desPreg + " con longitud mayor a 3 caracteres.";
+                        return false;
+                    }
+                }else{
+                    //console.log("opt not checked: " + "opt_" +pregunta + "_" + contenido);
+                }              
+             }
+            console.log("fin de previo_submit");
+            return true;
+        }
+
+    </script>
+</body>
+</html>

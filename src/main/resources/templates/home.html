@@ -24,7 +24,7 @@
                 <div class="col-md-10 col-lg-12 col-xl-10">
                     <div class="site-heading">
                         <p class="titulo-header" th:utext="${facultad}"></p>
-                        <span class="subheading">Incripción a Modalidades de participación</span>
+                        <span class="subheading">Incripción a modalidades de participación</span>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
 
                 <div th:each="cuestionarios : ${cuestionarios}">
                     <div class="post-preview" >
-                        <a th:href="@{'/cuestionario/inicial?idCuest=' + ${cuestionarios.parametros}}">
+                        <a th:href="@{'/cuestionario/solicitud?idCuestionario=' + ${cuestionarios.parametros}}">
                         <h2 class="post-title" th:text="${cuestionarios.titulo}"></h2>
                         <h3 class="post-subtitle" th:text="${cuestionarios.subtitulo}"> </h3></a>
 

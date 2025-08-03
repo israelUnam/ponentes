@@ -1,11 +1,20 @@
 package mx.unam.sa.ponentes.models;
 
 
-import jakarta.persistence.*;
-import lombok.Data;
+import java.time.LocalDateTime;
+import java.util.Set;
+
 import org.hibernate.annotations.JdbcTypeCode;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.util.Set;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.Data;
 
 
 @Data
@@ -33,4 +42,6 @@ public class User implements UserDetails {
     private String provider;
     private String providerId;
     private boolean enabled;
+    private LocalDateTime fecRegustro = LocalDateTime.now();
+
 }
