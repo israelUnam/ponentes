@@ -28,6 +28,7 @@ public class SecurityConfig {
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 log.trace("Configuring http filterChain");
                 http
+
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/login", "/css/**", "/js/**", "/images/**")
                                                 .permitAll()
@@ -45,6 +46,9 @@ public class SecurityConfig {
                                                                                 "GET".equalsIgnoreCase(
                                                                                                 request.getMethod()))
                                                 .permitAll());
+
+                http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
+
                 return http.build();
         }
 

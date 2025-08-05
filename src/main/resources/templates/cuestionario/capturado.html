@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta th:name="_csrf" th:content="${_csrf.token}" />
+    <title>Cuestionarios - Universidad Nacional Autónoma de México</title>
+    <link rel="icon" type="image/x-icon" href="/images/cropped-favicon-1-150x150.jpg" />
+    <headers th:replace="~{components/headers.html :: ~{_headers}}" />
+    <script	src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>    
+</head>
+<body id="cabecera">
+    <nav th:replace="~{components/nav.html :: ~{_nav}}" />
+    <!-- Page Header-->
+    <header class="masthead" style="background-image: url('/images/home-bg.jpg'); height: 125px;">
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="text-center">
+                    <h4 class="post-title">Cuestionario: <span th:text="${titulo}"></span> <span th:text="${subtitulo}"></span> </h4>
+                    <h4 class="post-subtitle">Resumen - Folio: <span th:text="${folio}"></span></h4>
+                </div>
+                <div th:each="respuesta, indice :${respuestas}">
+                    <div class="post-preview" >
+                        <p class="post-meta titulo-tema"  th:text="${respuesta.getDescTema}" th:if="${indice.index == 0 ||  respuesta.getDescTema != respuestas[indice.index-1].getDescTema}" > </p>
+                        
+                        <div class="mb-3" th:if="${respuesta.getDesCatalogo} == 'Texto'">
+                            <strong><label class="form-label"  th:text="${respuesta.getDesPregunta}"></label></strong>
+                            <input type="text" class="form-control"  minlength="3" maxlength="300"  th:value="${respuesta.getRespuesta}" disabled >
+                        </div>
+                        <div class="mb-3" th:if="${respuesta.getDesCatalogo} == 'Multiple'">
+                            <strong><p th:if="${respuesta.getIdPregunta != respuestas[indice.index-1].getIdPregunta}" th:text="${respuesta.getDesPregunta}"></p></strong>       
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked th:if="${respuesta.getRespuesta} == '1'" disabled >
+                                <input class="form-check-input" type="checkbox" th:if="${respuesta.getRespuesta} == '0'" disabled>
+                                <label class="form-check-label" th:text="${respuesta.getDesContenido}"></label>
+                                <input type="text" class="form-control"  minlength="3" maxlength="500" th:if="${respuesta.otro}"  disabled th:value="${respuesta.getResp_adicional}">
+                              </div>
+                        </div>  
+                        <div class="mb-3" th:if="${respuesta.getDesCatalogo} == 'Una'">
+                            <strong><p th:if="${respuesta.getIdPregunta != respuestas[indice.index-1].getIdPregunta}" th:text="${respuesta.getDesPregunta}"></p></strong>       
+                                <input class="form-check-input" type="radio"  checked th:if="${respuesta.getRespuesta} == '1'" disabled>
+                                <input class="form-check-input" type="radio"  th:if="${respuesta.getRespuesta} == '0'" disabled>
+                                <label class="form-check-label" th:text="${respuesta.getDesContenido}"></label>
+                                <input type="text" class="form-control"  minlength="3" maxlength="500" th:if="${respuesta.otro}"  disabled th:value="${respuesta.getResp_adicional}">
+                        </div>
+
+                        <div class="mb-3" th:if="${respuesta.getDesCatalogo == 'Archivo' and respuesta.getRespuesta != 'sin documento' }">
+                            <div>
+                                <div class="row">
+                                    <div class="col-lg-6 text-start">
+                                            <span th:id="@{'lbl_' + ${indice.count}}"> 
+                                                <a href="#" th:onclick="@{'openModalPDF(\'/documento/getPdf?param=' + ${#strings.arraySplit(respuesta.getRespuesta, '&')[0]} + '\')'}" data-bs-toggle="modal" data-bs-target="#modalPDF" data-bs-whatever="item 1">
+                                                <span th:text="${#strings.arraySplit(respuesta.getRespuesta, '&')[1]}"></span>
+                                                </a>
+                                            </span> 
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-6 text-end">
+                                        <button type="button" class="btn btn-info" th:data-info="${respuesta.getIdDocto + ',' + respuesta.getNomDocto +  ',' + indice.count}" 
+                                        data-bs-toggle="modal" data-bs-target="#exampleModal" th:if="${status} ==1 and ${acceso} == 'usuario'">Reemplazar documento</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="mb-3" th:if="${respuesta.getDesCatalogo} == 'SI'">
+                            <input class="form-check-input" type="checkbox" checked th:if="${respuesta.getRespuesta} == 'Si'" disabled >
+                            <input class="form-check-input" type="checkbox" checked th:if="${respuesta.getRespuesta} != 'Si'" disabled >
+                            <strong><label class="form-label"  th:text="${respuesta.getDesPregunta}"></label></strong>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <p>&nbsp;</p>
+            <div class="container" style="text-align: center;" th:if="${acceso} != 'evaluador'">
+                <div class="row">
+                    <p>Su información ha sido enviada, espere por favor el resultado de la evaluación en <a th:href="@{'listsolicitud?param=' + ${parametro}}"  class="btn btn-primary"> Consultar Solicitudes anteriores</a></p>
+                </div>
+            </div>
+            <div style="text-align: center;" th:if="${acceso} != 'evaluador'">
+                <a th:href="@{'/cuestionario/listsolicitud?param='+ ${parametro}}" class="btn btn-primary"> regresar</a>
+            </div>
+        </div>            
+
+    <!-- Footer-->
+    <foot th:replace="~{components/footer.html :: ~{_footer}}" />
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="customFile" class="form-label">Selecciona un archivo, el documento será reemplazado por el mismo</label>
+                <input type="file" class="form-control" id="customFile" accept=".pdf,.dox, .docx, .ppt, .pptx" />
+                <small class="form-text text-muted">Solo se permiten archivos en formato PDF, doc, docx, ppt y pptx.</small>
+                <hidden id="idDocto" />
+                <hidden id="idfile" />
+
+                <div class="alert alert-warning mt-3" role="alert" id="mensajeModal" style="display: none;" >
+                    <label class="form-label">texto.</label> 
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="submitForm()">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+  
+    <!-- Modal para mostrar PDF -->
+
+        <div class="modal fade" id="modalPDF" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg ">
+                <div class="modal-content">
+                    <div class="modal-body" >
+                        <iframe id="framePDF" width="760" height="750"></iframe>
+
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <script>
+        $(document).ready(function () {
+            $(".btn-info").click(function () {
+                $('#customFile').val('');
+
+                let info = $(this).data('info');
+                let data = info.split(',');
+                
+                console.log("Archivo a reemplazar" + data[1]);
+                $('#exampleModalLabel').html(data[1]);
+                $('#idDocto').val(data[0]);
+                $('#idfile').val(data[2]);
+                $('#mensajeModal').hide();
+            });
+        });
+
+        // AJAX form submission
+        function submitForm() {
+            console.log("Form submitted");
+            event.preventDefault(); // Prevent default form submission
+
+            var file = $('#customFile')[0].files[0];
+            var param = $('#idDocto').val();
+
+            console.log("param", param );
+
+            // Check if file is selected
+            if (!file) {
+                $('#mensajeModal').html("Por favor selecciona un archivo.");
+                $('#mensajeModal').show();
+                return;
+            }
+            // Get form data
+            var formData = new FormData();
+            formData.append('files', file);
+            formData.append('param', param);
+             // Send AJAX request
+            $.ajax({
+                url: "reemplazaArchivo",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                    },
+                success: function(response) {
+                    // Handle success response
+                    console.log(response);
+                    console.log(param);
+                    var contenido = "<a href='#' onclick=openModalPDF('/documento/getPdf?param=" + response.param + "');'>" + response.file + "</a>";
+                    console.log(contenido);
+                    $('#lbl_' + $('#idfile').val()).html(contenido);
+                    $('#exampleModal').modal('hide');
+                    
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.log(xhr.responseText);
+                    $('#mensajeModal').html("Error al subir el archivo.");
+                    $('#mensajeModal').show();
+                }
+            });
+        }
+
+    function openModalPDF(url){
+        //console.log("Mostrando documento");
+        //console.log(url);
+        document.getElementById('framePDF').src = url;
+    }
+    
+
+
+    </script>
+</body>
+</html>

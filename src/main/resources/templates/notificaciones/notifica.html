@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta th:name="_csrf" th:content="${_csrf.token}" />
+    <title>Cuestionarios - Universidad Nacional Autónoma de México</title>
+    <link rel="icon" type="image/x-icon" href="/images/cropped-favicon-1-150x150.jpg" />
+    <headers th:replace="~{components/headers.html :: ~{_headers}}" />
+  </head>
+<body id="cabecera">
+    <nav th:replace="~{components/nav.html :: ~{_nav}}" />
+    <!-- Page Header-->
+    <header class="masthead" style="background-image: url('/images/home-bg.jpg'); height: 125px;">
+    </header>
+    <div class="container">
+        <div class="col-10 " >
+            <h3 class="text-center">Cuestionario: <span th:text="${titulo}"></span> - <span th:text="${subtitulo}"> </span></h3>
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <h2 class="post-title">Notificaciones:</h2>
+                    <div class="row" th:each="notifica, index: ${notificaciones}">
+                        <div class="post-meta">
+                            
+                            <div th:class="${#strings.contains(notifica.notificacion, 'observaciones')} ? 'alert alert-info' : 'alert alert-success'" role="alert" >
+                                <p class="my-0" style="font-size: 15px;" th:text="${notifica.notificacion}"></p>
+                                <p class="my-0" style="font-size: 15px;"><a th:href="${notifica.urlDestino}"><i><small th:text="${notifica.fecReg}"></small></i></a></p>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </div>            
+
+    <!-- Footer-->
+    <foot th:replace="~{components/footer.html :: ~{_footer}}" />
+   
+</body>
+</html>

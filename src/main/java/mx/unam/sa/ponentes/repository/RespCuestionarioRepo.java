@@ -11,9 +11,9 @@ import mx.unam.sa.ponentes.models.RespCuestionario;
 
 @Repository
 public interface RespCuestionarioRepo extends JpaRepository<RespCuestionario, Long> {
-    List<RespCuestionario> findByUserIdAndCuestionarioIdCuestionario(Long idUser, Long idCuestionario);
+    List<RespCuestionario> findByUserIdAndCuestionarioIdCuestionario(Integer idUser, Long idCuestionario);
 
-    RespCuestionario findByUserIdAndIdRespCuestionario(Long idUser, Long idRespCuestionario);
+    RespCuestionario findByUserIdAndIdRespCuestionario(Integer idUser, Long idRespCuestionario);
 
     int countByCuestionarioIdCuestionarioAndStatus(Long idCuestionario, int status);
 

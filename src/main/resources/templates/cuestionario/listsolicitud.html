@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta th:name="_csrf" th:content="${_csrf.token}" />
+    <title>Cuestionarios - Universidad Nacional Autónoma de México</title>
+    <link rel="icon" type="image/x-icon" href="/images/cropped-favicon-1-150x150.jpg" />
+    <headers th:replace="~{components/headers.html :: ~{_headers}}" />
+    <script	src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>    
+    <link href="/css/buttonplus.css" rel="stylesheet" />
+</head>
+<body id="cabecera">
+    <nav th:replace="~{components/nav.html :: ~{_nav}}" />
+    <!-- Page Header-->
+    <header class="masthead" style="background-image: url('/images/home-bg.jpg'); height: 125px;">
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div th:each="cuestionario, indice :${cuestionariosResp}">
+                </div>
+                <table class="table table-striped table-hover" id="tablaSolicitud">
+                    <thead>
+                        <tr>
+                            <th>Folio</th>
+                            <th>Usuario</th>
+                            <th>Cuestionario</th>
+                            <th>Fecha de solicitud</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="cuestionario : ${cuestionariosResp}" th:id="'renglon_' + ${cuestionario.idRespCuestionario}" >
+                            <td>
+                                <span th:text="${cuestionario.folio}"></span>
+                            </td>
+                            <td>
+                                <span th:text="${cuestionario.usuario}"></span>
+                            </td>
+                            <td>
+                                <span th:text="${cuestionario.cuestionario}"></span>
+                            </td>   
+                            <td><span th:text="${cuestionario.fechaSolicitud}"></span></td>
+                            <td><span th:text="${cuestionario.estado}"></span>
+                            </td>
+                            <td style="text-align: center;"><a th:href="@{'capturado?param=' + ${cuestionario.parametros}}"><i class="bi bi-eye-fill" 
+                                data-toggle="tooltip" title="Ver solicitud"></i></a>
+                                <span th:if="${cuestionario.estado} =='Captura inicial'">
+                                    <a href="#" th:onclick="eliminarSolicitud([[${cuestionario.parametros}]],[[${cuestionario.idRespCuestionario}]])">
+                                    <i class=" bi bi-trash" data-toggle="tooltip" title="Eliminar solicitud"
+                                    style="color: rgb(12, 53, 124);"></i></a>
+                                </span>
+                                <span th:if="${cuestionario.estado} =='En recomendación'">
+                                    <a th:href="@{'/recomendacion/recomienda?param=' + ${cuestionario.parametros}}">
+                                        <i class="bi bi-clock-fill" style="color: rgb(12, 53, 124);"></i>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>           
+            </div>
+            <div style="text-align: center;">
+                <a href="/" class="btn btn-primary"> regresar</a>
+            </div>
+        </div>            
+    </div>    
+    <!-- Footer-->
+    <foot th:replace="~{components/footer.html :: ~{_footer}}" />
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Eliminar Solicitud</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Se eliminará la solicitud, pues se encuentra en captura inicial, este proceso no se puede deshacer ¿Desea continuar?
+                    <label id="modalLabel" style="display: none;"></label>
+                    <label id="renglonLabel" style="display: none;"></label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="Eliminar">Eliminar Solicitud</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+            keyboard: false
+        })
+
+        function eliminarSolicitud(parametro, renglon) {
+            //console.log("eliminarSolicitud", parametro);
+            let labelElement = document
+                .getElementById("modalLabel");
+                labelElement.innerHTML = parametro;
+
+            let renglonLabel = document
+                .getElementById("renglonLabel");
+                renglonLabel.innerHTML = renglon;
+                
+            myModal.show();
+        }
+
+        document.getElementById('Eliminar').addEventListener('click', function () {
+             let labelElement = document
+                .getElementById("modalLabel");
+            let param = labelElement.innerHTML;
+            let renglonLabel = document
+                .getElementById("renglonLabel");
+            let renglon = renglonLabel.innerHTML;
+            //console.log("Eliminando... " +  param + " renglon: " + renglon);
+            serviceEliminarSolicitud(param, renglon);
+            myModal.hide();
+        });
+
+
+        function serviceEliminarSolicitud(parametro, renglon) {
+            //console.log("serviceEliminarSolicitud ", parametro + " renglon: " + renglon);
+            const url = '/cuestionario/deleteSolicitud';
+            $.ajax({
+                url: url,
+                type: "DELETE",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                },
+                data: { solicitud: parametro },
+                success: function (response) {
+                    //console.log("Respuesta:", response);
+                    //Aquí va el código para eliminar el renglón de la tabla
+                    if (response === "Exito") {
+                        let table = document.getElementById("tablaSolicitud");
+                        let row = document.getElementById("renglon_" + renglon);
+                        row.parentNode.deleteRow(row.rowIndex - 1);
+                        // console.log('row eliminado: ' + row.rowIndex);
+                    }else{
+                        document.getElementById('lblTostada').innerHTML = "Fallo al eliminar la solicitud: " + response;
+                        tostada();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error en la solicitud:", error);
+                    console.error(xhr);
+                    console.error(status);
+                    document.getElementById('lblTostada').innerHTML = "Fallo al eliminar la solicitud";
+                    tostada();
+                }
+            });
+        }
+    </script>
+
+    <!-- Tostada -->
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="bi bi-rocket-takeoff"> </i>
+                <strong class="me-auto"> Roles</strong>
+                <small>En este momento</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"
+                    onclick="apagarTostada()"></button>
+            </div>
+            <div class="toast-body">
+                <label id="lblTostada">Hello, world! This is a toast message.</label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const toastTrigger = document.getElementById('liveToastBtn')
+        const toastLiveExample = document.getElementById('liveToast')
+        if (toastTrigger) {
+            toastTrigger.addEventListener('click', () => {
+                const toast = new bootstrap.Toast(toastLiveExample)
+
+                toast.show()
+            })
+        }
+
+        function tostada() {
+            // Obtener el elemento por su ID
+            var toast = document.getElementById("liveToast");
+            // Hacer visible el elemento
+            toast.style.display = "block";
+
+            setTimeout(function () {
+                apagarTostada();
+            }, 3000);
+        }
+
+        function apagarTostada() {
+            // Obtener el elemento por su ID
+            var toast = document.getElementById("liveToast");
+            // Hacer invisible el elemento
+            toast.style.display = "none";
+        }
+    </script>
+</body>
+</html>

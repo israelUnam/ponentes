@@ -17,6 +17,7 @@ import mx.unam.sa.ponentes.dto.CuestionarioDTO;
 import mx.unam.sa.ponentes.models.Cuestionario;
 import mx.unam.sa.ponentes.models.RespCuestionario;
 import mx.unam.sa.ponentes.models.Respuesta;
+import mx.unam.sa.ponentes.models.User;
 import mx.unam.sa.ponentes.repository.CatContenidoRepository;
 import mx.unam.sa.ponentes.repository.CuestionarioRepository;
 import mx.unam.sa.ponentes.repository.RespCuestionarioRepo;
@@ -73,14 +74,14 @@ public class CuestionarioService {
     }
 
     @Transactional
-    public RespCuestionario saveNuevasRespuestas(Long idCuestionario, List<Respuesta> respuestas, String user,
-            String claveCuestionario) throws RuntimeException {
+    public RespCuestionario saveNuevasRespuestas(Long idCuestionario, List<Respuesta> respuestas, 
+            String claveCuestionario, User user) throws RuntimeException {
 
         RespCuestionario respCuestionario = new RespCuestionario();
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         Cuestionario cuestionario = cuestionarioRep.findById(idCuestionario).get();
         respCuestionario.setCuestionario(cuestionario);
-        //respCuestionario.setUser(user);
+        respCuestionario.setUser(user);
         String folio = folioService.getFolio(currentYear, idCuestionario, claveCuestionario);
         respCuestionario.setFolio(folio);
         respCuestionarioRep.save(respCuestionario);
