@@ -18,6 +18,7 @@ public class Datosconf {
     private String correo;
     private String paginasistema;
     private String avisoprivacidad;
+    private String secretJWT;
 
     public boolean isProduccion() {
         return produccion;
@@ -93,6 +94,14 @@ public class Datosconf {
 
     public void setAvisoprivacidad(String avisoprivacidad) {
         this.avisoprivacidad = avisoprivacidad;
+    }
+
+    public String getSecretJWT() {
+        return secretJWT;
+    }
+
+    public void setSecretJWT(String secretJWT) {
+        this.secretJWT = secretJWT;
     }
 }
 

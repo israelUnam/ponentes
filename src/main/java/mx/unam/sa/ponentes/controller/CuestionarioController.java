@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import mx.unam.sa.ponentes.config.Datosconf;
 import mx.unam.sa.ponentes.dto.CuestionariosRespDTO;
 import mx.unam.sa.ponentes.dto.SolicitudDTOImp;
 import mx.unam.sa.ponentes.models.CatContenido;
@@ -49,10 +50,11 @@ public class CuestionarioController {
     private final RespuestaService respuestaService;
     private final DocumentoService documentoService;
     private final RegisterService registerService;
+    private final Datosconf datosconf;
 
     public CuestionarioController(CuestionarioService cuestionarioService, CatContenidoService catContenidoService,
             NotificacionService notificaService, UserRepository userRepository, RespuestaService respuestaService, 
-            DocumentoService documentoService, RegisterService registerService) {
+            DocumentoService documentoService, RegisterService registerService, Datosconf datosconf) {
         this.cuestionarioService = cuestionarioService;
         this.catContenidoService = catContenidoService;
         this.notificaService = notificaService;
@@ -60,6 +62,7 @@ public class CuestionarioController {
         this.respuestaService = respuestaService;
         this.documentoService = documentoService;
         this.registerService = registerService;
+        this.datosconf = datosconf;
     }
 
     @GetMapping("/solicitud")
@@ -350,7 +353,7 @@ public class CuestionarioController {
 
                 Map<String, Object> map = new HashMap<>();
                 map.put("idDocto", respuesta.getDocumento().getIdDocto());
-                parametros = Utils.encodeWJT("docto", map, "AxRwYWESR");
+                parametros = Utils.encodeWJT("docto", map, datosconf.getSecretJWT());
 
             } else {
                 throw new Exception("El documento no coincide con la respuesta");

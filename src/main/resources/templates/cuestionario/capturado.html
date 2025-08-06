@@ -53,7 +53,13 @@
                                 <div class="row">
                                     <div class="col-lg-6 text-start">
                                             <span th:id="@{'lbl_' + ${indice.count}}"> 
-                                                <a href="#" th:onclick="@{'openModalPDF(\'/documento/getPdf?param=' + ${#strings.arraySplit(respuesta.getRespuesta, '&')[0]} + '\')'}" data-bs-toggle="modal" data-bs-target="#modalPDF" data-bs-whatever="item 1">
+                                                <!-- Mostrar en modal si es PDF, de lo contrario solo dejar href -->
+                                                <span th:if="${#strings.endsWith(#strings.arraySplit(respuesta.getRespuesta, '&')[1], '.pdf')}">
+                                                    <a href="#" th:onclick="@{'openModalPDF(\'/documento/getPdf?param=' + ${#strings.arraySplit(respuesta.getRespuesta, '&')[0]} + '\')'}" data-bs-toggle="modal" data-bs-target="#modalPDF" data-bs-whatever="item 1">
+                                                </span>
+                                                <span th:unless="${#strings.endsWith(#strings.arraySplit(respuesta.getRespuesta, '&')[1], '.pdf')}">
+                                                    <a th:href="@{'/documento/getPdf?param=' + ${#strings.arraySplit(respuesta.getRespuesta, '&')[0]} }" target="_blank">
+                                                </span>
                                                 <span th:text="${#strings.arraySplit(respuesta.getRespuesta, '&')[1]}"></span>
                                                 </a>
                                             </span> 
@@ -100,7 +106,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <label for="customFile" class="form-label">Selecciona un archivo, el documento será reemplazado por el mismo</label>
+                <label for="customFile" class="form-label">Selecciona un archivo, el documento será reemplazado por el mismo x</label>
                 <input type="file" class="form-control" id="customFile" accept=".pdf,.dox, .docx, .ppt, .pptx" />
                 <small class="form-text text-muted">Solo se permiten archivos en formato PDF, doc, docx, ppt y pptx.</small>
                 <hidden id="idDocto" />
@@ -169,7 +175,7 @@
             }
             // Get form data
             var formData = new FormData();
-            formData.append('files', file);
+            formData.append('files', file );
             formData.append('param', param);
              // Send AJAX request
             $.ajax({
@@ -185,7 +191,7 @@
                     // Handle success response
                     console.log(response);
                     console.log(param);
-                    var contenido = "<a href='#' onclick=openModalPDF('/documento/getPdf?param=" + response.param + "');'>" + response.file + "</a>";
+                    var contenido = "<a href='#' onclick=\"openModalPDF('/documento/getPdf?param=" + response.param + "')\"  data-bs-toggle=\"modal\" data-bs-target=\"#modalPDF\" data-bs-whatever=\"item 1\">" + response.file + "</a>";
                     console.log(contenido);
                     $('#lbl_' + $('#idfile').val()).html(contenido);
                     $('#exampleModal').modal('hide');

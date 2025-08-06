@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import mx.unam.sa.ponentes.config.Datosconf;
 import mx.unam.sa.ponentes.models.Documento;
 import mx.unam.sa.ponentes.repository.DocumentoRepo;
 import mx.unam.sa.ponentes.utils.Utils;
@@ -23,13 +24,16 @@ public class DocumentoController {
     @Autowired
     DocumentoRepo documentoRep;
 
+    @Autowired
+    Datosconf datosconf;
+
     @GetMapping(value="/getPdf")
     @ResponseBody
     public ResponseEntity<byte[]> mostrarPDF(String param) {
 
         try {
 
-            Map<String, Object> map = Utils.decodeJWT("docto", param, "AxRwYWESR");
+            Map<String, Object> map = Utils.decodeJWT("docto", param, datosconf.getSecretJWT());
 
             int idDocto = (int) map.get("idDocto");
 
@@ -43,7 +47,10 @@ public class DocumentoController {
                 headers.setContentType(MediaType.APPLICATION_PDF);
             }else{
                 headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+                headers.setContentDispositionFormData("inline", documento.getNombre());
             }
+
+            
 
             //headers.setContentDispositionFormData("attachment", documento.getNombre());
 

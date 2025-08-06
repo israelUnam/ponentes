@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.transaction.Transactional;
+import mx.unam.sa.ponentes.config.Datosconf;
 import mx.unam.sa.ponentes.dto.DocumentoDTO;
 import mx.unam.sa.ponentes.models.Documento;
 import mx.unam.sa.ponentes.repository.DocumentoRepo;
@@ -18,8 +18,15 @@ import mx.unam.sa.ponentes.utils.Utils;
 
 @Service
 public class DocumentoService {
-    @Autowired
-    private DocumentoRepo documentoRep;
+    
+    public final DocumentoRepo documentoRep;
+    public final Datosconf datosconf;
+
+    public DocumentoService(DocumentoRepo documentoRep, Datosconf datosconf) {
+        this.documentoRep = documentoRep;
+        this.datosconf = datosconf;
+    }
+
 
     public Documento save(Documento documento) throws RuntimeException {
         try {
@@ -75,7 +82,7 @@ public class DocumentoService {
         documentos.forEach(docto -> {
             Map<String, Object> map = new HashMap<>();
             map.put("idDocto", docto.getIdDocto());
-            String paramdocto = Utils.encodeWJT("docto", map, "AxRwYWESR");
+            String paramdocto = Utils.encodeWJT("docto", map, datosconf.getSecretJWT());
             String url = "/documento/getPdf?param=" + paramdocto;
 
             Map<String, String> interior = new HashMap<String, String>();

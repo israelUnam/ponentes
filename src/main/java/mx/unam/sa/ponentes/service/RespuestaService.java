@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import mx.unam.sa.ponentes.config.Datosconf;
 import mx.unam.sa.ponentes.dto.CuestionariosRespDTO;
 import mx.unam.sa.ponentes.dto.SolicitudDTOImp;
 import mx.unam.sa.ponentes.models.Cuestionario;
@@ -29,6 +30,9 @@ public class RespuestaService {
 
     @Autowired
     RespuestaRep respuestaRep;
+
+    @Autowired
+    Datosconf datosconf;
 
 
     public Map<String, Object> getRespuestas(Long idRespCuestionario)
@@ -58,7 +62,7 @@ public class RespuestaService {
                         if (respuesta.getDocumento() != null && respuesta.getDocumento().getSize() > 0) {
                             Map<String, Object> map = new HashMap<>();
                             map.put("idDocto", respuesta.getDocumento().getIdDocto());
-                            String param = Utils.encodeWJT("docto", map, "AxRwYWESR");
+                            String param = Utils.encodeWJT("docto", map, datosconf.getSecretJWT());
 
                             //p.setRespuesta("<a href=\"/documento/getPdf?param=" + param + "\" target='_blank'>"
                             //        + respuesta.getDocumento().getNombre() + "</a>");

@@ -42,6 +42,11 @@
   {
     "name": "security.headers.frame",
     "type": "java.lang.String",
-    "description": "A description for 'security.headers.frame'"
+    "description": "Permite mostrar Frames con PDF"
+  },
+  {
+    "name": "app.secretJWT",
+    "type": "java.lang.String",
+    "description": "Contiene el dato para JWT de recuperación de documentos"
   }
 ]}
