@@ -87,8 +87,8 @@ public class CuestionarioController {
 
             return new String("cuestionario/solicitud");
         } catch (Exception e) {
-            model.addAttribute("mensaje", "cuestionario no encontrado");
-            return new String("/error");
+            System.out.println(e.getMessage());
+            return "redirect:/fallo?error=cuestionario no encontrado&status=500";
         }
     }
 
@@ -211,28 +211,32 @@ public class CuestionarioController {
 
             return new String("redirect:/cuestionario/capturado?param=" + param);
         } catch (Exception e) {
-            // Se envia a la vista de captura, pues hubo fallo
-            model.addAttribute("fallo", true);
+            System.out.println(e.getMessage());
+            
+            // En caso de error, se regresa a la vista de captura con el mensaje de error
             if (idCuestionario != null) {
                 try {
                     // Lee los datos del cuestionario para la vista de captura
                     Cuestionario cuestionario = cuestionarioService.findById(idCuestionario);
                     model.addAttribute("cuestionario", cuestionario);
                 } catch (Exception e2) {
-                    model.addAttribute("mensaje", "cuestionario no encontrado");
-                    return new String("/error");
+                    // Error no recuperable
+                    System.out.println("cuestionario no encontrado: cuestionario " + idCuestionario);
+                    return "redirect:/fallo?error=cuestionario no encontrado:&status=500";
                 }
 
                 // Vuelve a enviar las preguntas
                 if (preguntas != null) {
                     model.addAttribute("preguntas", preguntas);
                 } else {
-                    model.addAttribute("mensaje", "Fallo al recuperar las preguntas");
-                    return new String("/error");
+                    // Error no recuperable
+                    System.out.println("Fallo al recuperar las preguntas: cuestionario " + idCuestionario);
+                    return "redirect:/fallo?error=Fallo al recuperar las preguntas&status=500";
                 }
             } else {
-                model.addAttribute("mensaje", "Fallo al recuperar el cuestionario");
-                return new String("/error");
+                // Error no recuperable
+                System.out.println("fallo?error=Fallo al recuperar el cuestionario " + idCuestionario );
+                return "redirect:/fallo?error=Fallo al recuperar el cuestionario&status=500";
             }
             model.addAttribute("mensaje", e.getMessage());
             return new String("/cuestionario/solicitud");
@@ -268,7 +272,8 @@ public class CuestionarioController {
             model.addAttribute("parametro", parametro);
             return new String("cuestionario/capturado");
         } catch (Exception e) {
-            return new String("/error");
+            System.out.println(e.getMessage());
+            return "redirect:/fallo?error=fallo al mostrar captura&status=500";
         }
 
     }
@@ -299,7 +304,8 @@ public class CuestionarioController {
 
             return new String("cuestionario/listsolicitud");
         } catch (Exception e) {
-            return new String("/error");
+            System.out.println(e.getMessage());
+            return "redirect:/fallo?error=error al listar solicitud+&status=500";
         }
 
     }

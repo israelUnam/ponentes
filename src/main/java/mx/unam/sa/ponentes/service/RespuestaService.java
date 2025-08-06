@@ -87,7 +87,7 @@ public class RespuestaService {
             });
             salida.put("preguntasyResp", preguntasyResp);
         } catch (Exception e) {
-            throw new RuntimeException("Error al obtener las respuestas");
+            throw new RuntimeException("Error al obtener las respuestas:" + e.getMessage());
         }
         return salida;
     }

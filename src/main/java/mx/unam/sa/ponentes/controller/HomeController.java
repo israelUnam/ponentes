@@ -80,4 +80,20 @@ public class HomeController {
         return "contacto";
     }
 
+    @GetMapping("/fallo")
+    @Transactional
+    public String fallo(String error, Integer status, Model model, @AuthenticationPrincipal OAuth2User principal) {
+        if (principal != null) {
+            model.addAttribute("error", error);
+            model.addAttribute("status", status);
+            model.addAttribute("name", principal.getAttribute("name"));
+            model.addAttribute("email", principal.getAttribute("email"));
+            model.addAttribute("picture", principal.getAttribute("picture"));
+            model.addAttribute("facultad", datosconf.getFacultad());
+        }
+
+        return "error";
+    }
+
+
 }

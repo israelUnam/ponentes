@@ -35,8 +35,8 @@ public class Catalogos {
                 }
                 System.out.println("Creando catálogos...");
                 // En caso contrario llena los datos básicos
-                // alta_authorities();
-                // catTipoPregunta();
+                alta_authorities();
+                catTipoPregunta();
                 cuestionario_conferencia();
                 cuestionario_microtaller();
                 cuestionario_panel();

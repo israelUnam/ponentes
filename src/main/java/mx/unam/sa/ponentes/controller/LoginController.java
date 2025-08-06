@@ -28,4 +28,12 @@ public class LoginController {
         }
         return "login";
     }
+
+
+    @GetMapping("/logoutgl")
+    public String logoutgl() {
+
+        return "logoutgl";
+    }
+    
 }
