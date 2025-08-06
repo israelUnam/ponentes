@@ -313,7 +313,7 @@ public class CuestionarioController {
         Integer idDocto = Integer.parseInt(Utils.getMapDecode(param).get("idDocto").toString());
         Long idRespuesta = Long.parseLong(Utils.getMapDecode(param).get("idRespuesta").toString());
         Long idContenido = Long.parseLong(Utils.getMapDecode(param).get("idContenido").toString());
-
+        String extension = "pdf";
         try {
 
             User user = userRepository.findByUsername(principal.getAttribute("email"))
@@ -327,6 +327,7 @@ public class CuestionarioController {
 
             int iddoctoResp = respuesta.getDocumento().getIdDocto();
             log.info("idDocto: " + idDocto + " respuesta.idDocto: " + iddoctoResp);
+            
             if (iddoctoResp == idDocto) {
                 Documento documento = new Documento();
                 documento.setIdDocto(idDocto);
@@ -353,6 +354,12 @@ public class CuestionarioController {
 
                 Map<String, Object> map = new HashMap<>();
                 map.put("idDocto", respuesta.getDocumento().getIdDocto());
+
+                
+                if (nomDocto != null ) {
+                    extension = nomDocto.substring(nomDocto.lastIndexOf(".") + 1);
+                }
+                
                 parametros = Utils.encodeWJT("docto", map, datosconf.getSecretJWT());
 
             } else {
@@ -360,10 +367,12 @@ public class CuestionarioController {
             }
 
             final String paramSalida = parametros;
+            final String extensionFinal = extension;
 
             return ResponseEntity.ok().body(new HashMap<String, Object>() {
                 {
                     put("param", paramSalida);
+                    put("extension", extensionFinal);
                     put("file", files[0].getOriginalFilename());
                     put("mensaje", "Exito");
                     put("status", 1);

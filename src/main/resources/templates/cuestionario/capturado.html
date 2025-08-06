@@ -191,8 +191,20 @@
                     // Handle success response
                     console.log(response);
                     console.log(param);
-                    var contenido = "<a href='#' onclick=\"openModalPDF('/documento/getPdf?param=" + response.param + "')\"  data-bs-toggle=\"modal\" data-bs-target=\"#modalPDF\" data-bs-whatever=\"item 1\">" + response.file + "</a>";
-                    console.log(contenido);
+                    console.log(response.extension);
+
+
+                    var contenido = "";
+                    
+                    if (response.extension == 'pdf') {
+                        contenido = "<a href='#' onclick=\"openModalPDF('/documento/getPdf?param=" + response.param + "')\"  data-bs-toggle=\"modal\" data-bs-target=\"#modalPDF\" data-bs-whatever=\"item 1\">" + response.file + "</a>";
+                    } else {
+                        contenido = "<a href='/documento/getPdf?param=" + response.param + "' target='_blank'>" + response.file + "</a>";
+                    }
+                    
+                    //console.log(contenido);
+
+
                     $('#lbl_' + $('#idfile').val()).html(contenido);
                     $('#exampleModal').modal('hide');
                     
