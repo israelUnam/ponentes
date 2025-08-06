@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta th:name="_csrf" th:content="${_csrf.token}" />
+    <title>Cuestionarios - Universidad Nacional Autónoma de México</title>
+    <link rel="icon" type="image/x-icon" href="/images/cropped-favicon-1-150x150.jpg" />
+    <headers th:replace="~{components/headers.html :: ~{_headers}}" />
+    <title>Start Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script	src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>    
+</head>
+<body id="cabecera">
+    <nav th:replace="~{components/nav.html :: ~{_nav}}" />
+    <!-- Page Header-->
+    <header class="masthead" style="background-image: url('/images/home-bg.jpg'); height: 125px;">
+    </header>
+
+    <div class="container px-4 px-lg-5 ">
+      <div class="row d-flex justify-content-center">
+          <div class="col-10 " >
+              <h3 class="text-center">Cuestionario: <span th:text="${titulo}"></span> - <span th:text="${subtitulo}"> </span></h3>
+              <h4 class="text-center">Proyectos en <span th:if="${tipo==1}">Captura</span> <span th:if="${tipo==2}">Revisión</span>
+                <span th:if="${externo}"> - evaluador externo</span>
+              </h4>
+              <table class="table table-striped table-hover" id="tablaSolicitud">
+                  <thead>
+                      <tr>
+                          <th style="text-align: center;">Folio</th>
+                          <th>Usuario</th>
+                          <th>Fecha de captura</th>
+                          <th style="text-align: center;">Acciones</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr th:each="detalle, index: ${detalles}" th:id="'renglon_' + ${index.count}">
+                          <td th:text="${detalle.folio}" style="text-align: center;"></td>
+                          <td th:text="${detalle.usuario}"></td>
+                          <td th:text="${detalle.fechaCaptura}"></td>
+                          <td style="text-align: center;">
+                            <span th:if="${tipo == 1}">      
+                                <a th:href="@{'/cuestionario/capturado?param=' + ${detalle.param}}" target="_blank"><i class="bi bi-eye-fill" 
+                                data-toggle="tooltip" title="Ver solicitud"></i></a>
+                            </span>
+                            <!--    
+                            <span th:if="${tipo == 1}">      
+                              <a href="#" th:onclick="eliminarSolicitud([[${detalle.param}]],[[${index.count}]],[[${detalle.folio}]])">
+                                <i class=" bi bi-trash" data-toggle="tooltip" title="Eliminar solicitud"
+                                style="color: rgb(12, 53, 124);"></i></a>  
+                            </span>
+                            -->  
+                            <span th:if="${tipo == 2 and detalle.acceso}">
+                                <a th:href="@{'/evalua/evaluasolicitud?param=' + ${detalle.param}}" target="_blank">
+                                <i class="bi bi-chat-left-dots"  data-toggle="tooltip" title="Revisar solicitud" style="color: rgb(12, 53, 124);"></i></a> 
+                                &nbsp;
+                                <a href="#" th:onclick="showmodal([[${detalle.folio}]],[[${detalle.param}]],[[${index.count}]])">
+                                <i class="bi bi-wrench" data-toggle="tooltip" title="Cambiar a recomendación" style="color: rgb(12, 53, 124); font-size: 25px;"></i></a>
+                            </span>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+          <div style="text-align: center;">
+              <a href="/evalua/listcuestionarios" class="btn btn-primary"> regresar</a>
+          </div>
+      </div>
+  </div>  
+
+      <!-- Modal -->
+      <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Eliminar Solicitud</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Se eliminará la solicitud <label id="solicitudLabel"> </label>, pues se encuentra en captura inicial, se guardaran datos del usuario que realiza la operación,
+                    este proceso no se puede deshacer.
+                    ¿Desea continuar?
+                    <label id="modalLabel" style="display: none;"></label>
+                    <label id="renglonLabel" style="display: none;"></label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="Eliminar">Eliminar Solicitud</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer-->
+    <foot th:replace="~{components/footer.html :: ~{_footer}}" />
+
+    <script>
+        var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+            keyboard: false
+        })
+
+        function eliminarSolicitud(parametro, renglon, folio) {
+            //console.log("eliminarSolicitud", parametro);
+            let labelElement = document
+                .getElementById("modalLabel");
+                labelElement.innerHTML = parametro;
+
+            let renglonLabel = document
+                .getElementById("renglonLabel");
+                renglonLabel.innerHTML = renglon;
+            
+            let solicitudLabel = document
+                .getElementById("solicitudLabel");
+                solicitudLabel.innerHTML = folio;
+                
+            myModal.show();
+        }
+
+        document.getElementById('Eliminar').addEventListener('click', function () {
+             let labelElement = document
+                .getElementById("modalLabel");
+            let param = labelElement.innerHTML;
+            let renglonLabel = document
+                .getElementById("renglonLabel");
+            let renglon = renglonLabel.innerHTML;
+            //console.log("Eliminando... " +  param + " renglon: " + renglon);
+            serviceEliminarSolicitud(param, renglon);
+            myModal.hide();
+        });
+
+
+        function serviceEliminarSolicitud(parametro, renglon) {
+            console.log("serviceEliminarSolicitud ", parametro + " renglon: " + renglon);
+            const url = '/cuestionario/deleteSolicitud';
+            $.ajax({
+                url: url,
+                type: "DELETE",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                },
+                data: { solicitud: parametro },
+                success: function (response) {
+                    console.log("Respuesta:", response);
+                    //Aquí va el código para eliminar el renglón de la tabla
+                    if (response === "Exito") {
+                        let table = document.getElementById("tablaSolicitud");
+                        let row = document.getElementById("renglon_" + renglon);
+                        row.parentNode.deleteRow(row.rowIndex - 1);
+                        console.log('row eliminado: ' + row.rowIndex);
+                    }else{
+                        document.getElementById('lblTostada').innerHTML = "Fallo al eliminar la solicitud: " + response;
+                        tostada();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error en la solicitud:", error);
+                    console.error(xhr);
+                    console.error(status);
+                    document.getElementById('lblTostada').innerHTML = "Fallo al eliminar la solicitud";
+                    tostada();
+                }
+            });
+        }
+    </script>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Cambio de solicitud a recomendación. Folio <span id="folio"></span> </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">                
+                    <label class="form-label">Observaciones a mostrar al responsable.</label>
+                    <label class="form-label">La observación y el documento seran mostrados al responsable del proyecto para que de continuidad a lo solicitado por los evaluadores.</label>
+                    <textarea class="form-control" id="observaciones" rows="3"></textarea>
+                    <label for="formFileMultiple" class="form-label">Agregue los archivos que va a asociar</label>
+                    <input class="form-control" type="file" id="formFileMultiple" multiple>
+
+                    <br />
+                    <label class="form-label">Se enviara un correo de notificación al responsable del proyecto</label>
+
+                    
+                    <div id="spinner" class="text-center" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p>Enviando correo, por favor espere...</p>
+                    </div>
+
+                    <input type="hidden" id="paramsFolio">  
+                    <input type="hidden" id="idRenglon">  
+                    <br>
+                    <div class="alert alert-danger" role="alert" id="uploadStatus" style="display: none;">
+                        A simple danger alert—check it out!
+                    </div>
+                    <div class="alert alert-success" role="alert" id="successStatus" style="display: none;">
+                        A simple success alert—check it out!
+                      </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="uploadButton">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+
+    function showmodal(folio, param, idRenglon){
+        //console.log("showmodal: " + id);
+      
+        let fileInput = document.getElementById('formFileMultiple');
+        fileInput.value = '';
+        document.getElementById('observaciones').value = '';
+        document.getElementById('observaciones').disabled = false;
+        document.getElementById('formFileMultiple').disabled = false;
+        document.getElementById('uploadStatus').style.display = 'none';
+        document.getElementById('successStatus').style.display = 'none';
+        document.getElementById('folio').innerHTML = folio;
+        document.getElementById('paramsFolio').value = param;
+        document.getElementById('idRenglon').value = idRenglon;
+        var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
+        })
+        myModal.show();
+    }
+
+    let fileInput = document.getElementById('formFileMultiple');
+    let uploadButton = document.getElementById('uploadButton');
+    let uploadStatus = document.getElementById('uploadStatus');
+    let successStatus = document.getElementById('successStatus');
+    
+
+    uploadButton.addEventListener('click', () => {
+        //console.log("Subiendo archivo...");
+
+        document.getElementById('spinner').style.display = 'block';
+
+        uploadButton.disabled = true;
+        let formData = new FormData();
+        let files = fileInput.files;
+
+        if(files.length === 0){
+            uploadStatus.innerHTML = "No hay archivos para subir";
+            uploadStatus.style.display = 'block';
+            uploadButton.disabled = false;
+            document.getElementById('spinner').style.display = 'none';
+            return;
+        }
+
+        if(document.getElementById('observaciones').value === ""){
+            uploadStatus.innerHTML = "Debe agregar observaciones";
+            uploadStatus.style.display = 'block';
+            uploadButton.disabled = false;
+            document.getElementById('spinner').style.display = 'none';
+            return;
+        }
+
+        for (let i = 0; i < files.length; i++) {
+            //console.log("Archivo:", files[i]);
+            formData.append('files', files[i]);
+        }
+
+        let observaciones = document.getElementById('observaciones').value;
+        observaciones = observaciones.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        formData.append('observaciones',observaciones);
+        formData.append('param', document.getElementById('paramsFolio').value);
+        formData.append('accion', 'observacion');
+        $.ajax({
+                url: '/recomendacionRest/guardaSolicitudRevision',
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                },  
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    //console.log("Respuesta:", response);
+                    if (response.status === 1) {
+                        uploadStatus.style.display = 'none';
+                        let idRenglon = document.getElementById('idRenglon').value;
+                        //console.log("idRenglon: ", idRenglon);
+                        let table = document.getElementById("tablaSolicitud");
+                        let row = document.getElementById("renglon_" + idRenglon);
+                        row.parentNode.deleteRow(row.rowIndex - 1);
+                        successStatus.innerHTML = "Datos cargados con éxito, el documento cambia a recomendación por el responsable del proyecto.";
+                        successStatus.style.display = 'block';
+                        document.getElementById('observaciones').disabled = true;
+                        document.getElementById('formFileMultiple').disabled = true;
+                    }else{
+                        uploadButton.disabled = false;
+                        uploadStatus.innerHTML = "Fallo al cargar los datos: " + response.mensaje;
+                        uploadStatus.style.display = 'block';
+                    }
+                    document.getElementById('spinner').style.display = 'none';
+                },
+                error: function (xhr, status, error) {
+                    uploadButton.disabled = false;
+                    console.error("Error en la solicitud:", error);
+                    console.error(xhr);
+                    console.error(status);
+                    document.getElementById('spinner').style.display = 'none';
+                }
+        });
+    });
+
+  </script>
+
+</body>
+</html>

@@ -71,6 +71,7 @@ public class CuestionarioController {
         model.addAttribute("name", principal.getAttribute("name"));
         model.addAttribute("email", principal.getAttribute("email"));
         model.addAttribute("picture", principal.getAttribute("picture"));
+        model.addAttribute("avisoprivacidad", datosconf.getAvisoprivacidad());
 
         model.addAttribute("fallo", false);
         try {
@@ -100,6 +101,7 @@ public class CuestionarioController {
         model.addAttribute("email", principal.getAttribute("email"));
         model.addAttribute("picture", principal.getAttribute("picture"));
         model.addAttribute("fallo", false);
+        model.addAttribute("avisoprivacidad", datosconf.getAvisoprivacidad());
 
         User user = userRepository.findByUsername(principal.getAttribute("email"))
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -249,6 +251,7 @@ public class CuestionarioController {
         model.addAttribute("name", principal.getAttribute("name"));
         model.addAttribute("email", principal.getAttribute("email"));
         model.addAttribute("picture", principal.getAttribute("picture"));
+        model.addAttribute("avisoprivacidad", datosconf.getAvisoprivacidad());
 
         try {
             Map<String, Object> entrada = Utils.getMapDecode(param);
@@ -285,6 +288,7 @@ public class CuestionarioController {
         model.addAttribute("name", principal.getAttribute("name"));
         model.addAttribute("email", principal.getAttribute("email"));
         model.addAttribute("picture", principal.getAttribute("picture"));
+        model.addAttribute("avisoprivacidad", datosconf.getAvisoprivacidad());
 
         try {
             User user = userRepository.findByUsername(principal.getAttribute("email"))

@@ -152,7 +152,7 @@ public class CuestionarioService {
      * @param muestraTodos   muestra todos los cuestionarios
      */
     public List<CuestDetalleDTO> getDetalleCuestionario(Long idCuestionario, int status,
-            String acceso, String username, boolean muestraTodos) {
+            String acceso, boolean muestraTodos) {
 
         List<RespCuestionario> respCuestionarios = null;
 
