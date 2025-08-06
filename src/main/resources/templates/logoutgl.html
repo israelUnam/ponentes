@@ -72,10 +72,114 @@
         <div class="login-icon">
             <img src="/images/logo_col_nobord_codep@4x .png" alt="Logo codep" style="width: 50px; height: 50px;">
         </div>
-        <h1>Cerrando cuenta</h1>
-        <p>Estamos cerrando la cuenta de google.</p>
-        <p>Si esta página no continua de clic <a href="/">aqui</a></p>
 
+         <div class="iframe-container">
+        <iframe id="logoutframe" src="https://accounts.google.com/logout" style="display: none;"></iframe>
+        </div>
+    
+        <div class="container">
+            <div class="logout-container">
+                <div class="logout-icon">
+                    <i class="bi bi-box-arrow-right"></i>
+                </div>
+                
+                <h2 class="mb-3">Cerrando Sesión</h2>
+                <p class="text-muted mb-4">
+                    Estamos cerrando tu sesión de Google y limpiando los datos de la aplicación...
+                </p>
+                
+                <div class="mb-4">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Cerrando sesión...</span>
+                    
+                        <p class="mt-2 text-muted">Procesando logout...</p>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <a href="/" class="btn btn-primary" id="returnBtn" style="display: none;">
+                        <i class="bi bi-house me-2"></i>Volver al Inicio
+                    </a>
+                    <button class="btn btn-outline-secondary" onclick="forceLogout()" id="forceBtn" style="display: none;">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Forzar Logout
+                    </button>
+                </div>
+                
+                <div class="mt-4">
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Si la página no se actualiza automáticamente, haz clic en "Volver al Inicio"
+                    </small>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Función para forzar el logout
+        function forceLogout() {
+            // Limpiar cualquier dato de sesión local
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Redirigir a la página principal
+            window.location.href = '/';
+        }
+        
+        // Función para mostrar el botón de regreso después de un tiempo
+        function showReturnButton() {
+            document.getElementById('returnBtn').style.display = 'block';
+            //document.getElementById('forceBtn').style.display = 'block';
+            
+            // Ocultar el spinner
+            const spinner = document.querySelector('.spinner-border');
+            if (spinner) {
+                spinner.style.display = 'none';
+            }
+            
+            // Cambiar el texto
+            const text = document.querySelector('.text-muted');
+            if (text) {
+                text.textContent = 'Sesión cerrada. Puedes regresar al inicio.';
+            }
+        }
+        
+        // Función para manejar el logout automático
+        function handleLogout() {
+            // Esperar 2 segundos como sugiere la solución de Google Groups
+            setTimeout(function() {
+                // Limpiar la sesión local de Spring Security
+                fetch('/logout', {
+                    method: 'GET',
+                    credentials: 'same-origin'
+                }).then(function() {
+                    // Mostrar botón de regreso después de 3 segundos total
+                    setTimeout(showReturnButton, 1000);
+
+                }).catch(function() {
+                    // Si hay error, mostrar botón de regreso inmediatamente
+                    showReturnButton();
+                });
+            }, 2000);
+        }
+        
+        // Iniciar el proceso de logout cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Iniciar el proceso de logout
+            handleLogout();
+            
+            // Mostrar botón de regreso después de 5 segundos como fallback
+            setTimeout(showReturnButton, 5000);
+        });
+        
+        // Manejar errores del iframe
+        const iframe = document.getElementById('logoutframe');
+        if (iframe) {
+            iframe.onerror = function() {
+                console.log('Error en iframe de logout');
+                showReturnButton();
+            };
+        }
+    </script>
 </body>
 </html>
