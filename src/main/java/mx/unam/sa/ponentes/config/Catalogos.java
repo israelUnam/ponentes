@@ -35,8 +35,8 @@ public class Catalogos {
                 }
                 System.out.println("Creando catálogos...");
                 // En caso contrario llena los datos básicos
-                alta_authorities();
-                catTipoPregunta();
+                // alta_authorities();
+                // catTipoPregunta();
                 cuestionario_conferencia();
                 cuestionario_microtaller();
                 cuestionario_panel();
@@ -44,7 +44,6 @@ public class Catalogos {
                 cuestionario_carteDigital();
                 cuestionario_artículosInvestigación();
                 cuestionario_cineMintuo();
-
 
                 System.out.println("Catálogos creados.");
         }
@@ -142,61 +141,7 @@ public class Catalogos {
                                 false, 4));
                 tema1.getCatPreguntas().add(t1_catPregunta5);
 
-                CatPregunta t1_catPregunta6 = new CatPregunta(null, "Ejes y líneas temáticas",
-                                "Seleccione la línea temática en que participa", catUna, tema1, true, 5);
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en proyectos de información, de nuevas tecnologías y de software en el sector público.   ",
-                                false, 1));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos sociales: Agenda política, ética y participación.",
-                                false, 2));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos de la economía social y solidaria.",
-                                false, 3));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Administración de proyectos en el Sector publico.",
-                                false, 4));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos sociales y participacion ciudadana para la reconstrucción del tejido social.",
-                                false, 5));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "La ética en la construcción de la vivienda digana.",
-                                false, 6));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Responsabilidad ética y compromiso social.",
-                                false, 7));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética de la inteligencia artificial: una nueva tecnología centrada en el ser humano.",
-                                false, 8));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética y Responsabilidad Social en la Dirección de Proyectos Cinematográficos: El Rol del Financiamiento Público",
-                                false, 9));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la toma de decisiones de TIC.",
-                                false, 10));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la toma de decisiones de TIC.",
-                                false, 11));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la dirección de proyectos sociales y voluntariado.",
-                                false, 12));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Sostenibilidad y Valor Social.",
-                                false, 13));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Otra.",
-                                false, 14));
-
+                CatPregunta t1_catPregunta6 = get_catPregunta_Ejes(catUna, tema1);
                 tema1.getCatPreguntas().add(t1_catPregunta6);
 
                 cuestionario.getTemas().add(tema1);
@@ -254,11 +199,14 @@ public class Catalogos {
                                                 + "El documento deberá de cumplir con los siguientes lineamientos: plantilla de aacuerdo a la convocatoria y al nombrar al archivo:"
                                                 + "Para el archivo, PowerPont extensión “.pptx” nombrado del archivo con la siguiente nomenclatura: "
                                                 + "codep4_" + CVEMOD + "_[ddmmaa]_[apellido paterno].pptx”",
-                                catArchivo, tema3, true, 1);
+                                catArchivo, tema3, true, 2);
                 t3_catPregunta2.getCatContenido()
                                 .add(new CatContenido(null, t3_catPregunta2, "Archivo",
                                                 false, 0));
                 tema3.getCatPreguntas().add(t3_catPregunta2);
+
+                CatPregunta t3_catPregunta3 = get_catPregunta_Semblanza(catArchivo, tema3, CVEMOD,3);
+                tema3.getCatPreguntas().add(t3_catPregunta3);
 
                 cuestionario.getTemas().add(tema3);
 
@@ -340,61 +288,7 @@ public class Catalogos {
                                 false, 4));
                 tema1.getCatPreguntas().add(t1_catPregunta5);
 
-                CatPregunta t1_catPregunta6 = new CatPregunta(null, "Ejes y líneas temáticas",
-                                "Seleccione la línea temática en que participa", catUna, tema1, true, 5);
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en proyectos de información, de nuevas tecnologías y de software en el sector público.   ",
-                                false, 1));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos sociales: Agenda política, ética y participación.",
-                                false, 2));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos de la economía social y solidaria.",
-                                false, 3));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Administración de proyectos en el Sector publico.",
-                                false, 4));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos sociales y participacion ciudadana para la reconstrucción del tejido social.",
-                                false, 5));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "La ética en la construcción de la vivienda digana.",
-                                false, 6));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Responsabilidad ética y compromiso social.",
-                                false, 7));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética de la inteligencia artificial: una nueva tecnología centrada en el ser humano.",
-                                false, 8));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética y Responsabilidad Social en la Dirección de Proyectos Cinematográficos: El Rol del Financiamiento Público",
-                                false, 9));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la toma de decisiones de TIC.",
-                                false, 10));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la toma de decisiones de TIC.",
-                                false, 11));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la dirección de proyectos sociales y voluntariado.",
-                                false, 12));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Sostenibilidad y Valor Social.",
-                                false, 13));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Otra.",
-                                false, 14));
-
+                CatPregunta t1_catPregunta6 = get_catPregunta_Ejes(catUna, tema1);
                 tema1.getCatPreguntas().add(t1_catPregunta6);
 
                 cuestionario.getTemas().add(tema1);
@@ -457,6 +351,9 @@ public class Catalogos {
                                 .add(new CatContenido(null, t3_catPregunta2, "Archivo",
                                                 false, 0));
                 tema3.getCatPreguntas().add(t3_catPregunta2);
+
+                CatPregunta t3_catPregunta3 = get_catPregunta_Semblanza(catArchivo, tema3, CVEMOD,2);
+                tema3.getCatPreguntas().add(t3_catPregunta3);
 
                 cuestionario.getTemas().add(tema3);
 
@@ -538,61 +435,7 @@ public class Catalogos {
                                 false, 4));
                 tema1.getCatPreguntas().add(t1_catPregunta5);
 
-                CatPregunta t1_catPregunta6 = new CatPregunta(null, "Ejes y líneas temáticas",
-                                "Seleccione la línea temática en que participa", catUna, tema1, true, 5);
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en proyectos de información, de nuevas tecnologías y de software en el sector público.   ",
-                                false, 1));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos sociales: Agenda política, ética y participación.",
-                                false, 2));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos de la economía social y solidaria.",
-                                false, 3));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Administración de proyectos en el Sector publico.",
-                                false, 4));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos sociales y participacion ciudadana para la reconstrucción del tejido social.",
-                                false, 5));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "La ética en la construcción de la vivienda digana.",
-                                false, 6));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Responsabilidad ética y compromiso social.",
-                                false, 7));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética de la inteligencia artificial: una nueva tecnología centrada en el ser humano.",
-                                false, 8));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética y Responsabilidad Social en la Dirección de Proyectos Cinematográficos: El Rol del Financiamiento Público",
-                                false, 9));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la toma de decisiones de TIC.",
-                                false, 10));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la toma de decisiones de TIC.",
-                                false, 11));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la dirección de proyectos sociales y voluntariado.",
-                                false, 12));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Sostenibilidad y Valor Social.",
-                                false, 13));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Otra.",
-                                false, 14));
-
+                CatPregunta t1_catPregunta6 = get_catPregunta_Ejes(catUna, tema1);
                 tema1.getCatPreguntas().add(t1_catPregunta6);
 
                 cuestionario.getTemas().add(tema1);
@@ -655,6 +498,9 @@ public class Catalogos {
                                 .add(new CatContenido(null, t3_catPregunta2, "Archivo",
                                                 false, 0));
                 tema3.getCatPreguntas().add(t3_catPregunta2);
+
+                CatPregunta t3_catPregunta3 = get_catPregunta_Semblanza(catArchivo, tema3, CVEMOD,2);
+                tema3.getCatPreguntas().add(t3_catPregunta3);
 
                 cuestionario.getTemas().add(tema3);
 
@@ -736,61 +582,7 @@ public class Catalogos {
                                 false, 4));
                 tema1.getCatPreguntas().add(t1_catPregunta5);
 
-                CatPregunta t1_catPregunta6 = new CatPregunta(null, "Ejes y líneas temáticas",
-                                "Seleccione la línea temática en que participa", catUna, tema1, true, 5);
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en proyectos de información, de nuevas tecnologías y de software en el sector público.   ",
-                                false, 1));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos sociales: Agenda política, ética y participación.",
-                                false, 2));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos de la economía social y solidaria.",
-                                false, 3));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Administración de proyectos en el Sector publico.",
-                                false, 4));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos sociales y participacion ciudadana para la reconstrucción del tejido social.",
-                                false, 5));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "La ética en la construcción de la vivienda digana.",
-                                false, 6));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Responsabilidad ética y compromiso social.",
-                                false, 7));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética de la inteligencia artificial: una nueva tecnología centrada en el ser humano.",
-                                false, 8));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética y Responsabilidad Social en la Dirección de Proyectos Cinematográficos: El Rol del Financiamiento Público",
-                                false, 9));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la toma de decisiones de TIC.",
-                                false, 10));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la toma de decisiones de TIC.",
-                                false, 11));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la dirección de proyectos sociales y voluntariado.",
-                                false, 12));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Sostenibilidad y Valor Social.",
-                                false, 13));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Otra.",
-                                false, 14));
-
+                CatPregunta t1_catPregunta6 = get_catPregunta_Ejes(catUna, tema1);
                 tema1.getCatPreguntas().add(t1_catPregunta6);
 
                 cuestionario.getTemas().add(tema1);
@@ -853,6 +645,9 @@ public class Catalogos {
                                 .add(new CatContenido(null, t3_catPregunta2, "Archivo",
                                                 false, 0));
                 tema3.getCatPreguntas().add(t3_catPregunta2);
+
+                CatPregunta t3_catPregunta3 = get_catPregunta_Semblanza(catArchivo, tema3, CVEMOD,2);
+                tema3.getCatPreguntas().add(t3_catPregunta3);
 
                 cuestionario.getTemas().add(tema3);
 
@@ -934,61 +729,7 @@ public class Catalogos {
                                 false, 4));
                 tema1.getCatPreguntas().add(t1_catPregunta5);
 
-                CatPregunta t1_catPregunta6 = new CatPregunta(null, "Ejes y líneas temáticas",
-                                "Seleccione la línea temática en que participa", catUna, tema1, true, 5);
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en proyectos de información, de nuevas tecnologías y de software en el sector público.   ",
-                                false, 1));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos sociales: Agenda política, ética y participación.",
-                                false, 2));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos de la economía social y solidaria.",
-                                false, 3));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Administración de proyectos en el Sector publico.",
-                                false, 4));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos sociales y participacion ciudadana para la reconstrucción del tejido social.",
-                                false, 5));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "La ética en la construcción de la vivienda digana.",
-                                false, 6));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Responsabilidad ética y compromiso social.",
-                                false, 7));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética de la inteligencia artificial: una nueva tecnología centrada en el ser humano.",
-                                false, 8));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética y Responsabilidad Social en la Dirección de Proyectos Cinematográficos: El Rol del Financiamiento Público",
-                                false, 9));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la toma de decisiones de TIC.",
-                                false, 10));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la toma de decisiones de TIC.",
-                                false, 11));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la dirección de proyectos sociales y voluntariado.",
-                                false, 12));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Sostenibilidad y Valor Social.",
-                                false, 13));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Otra.",
-                                false, 14));
-
+                CatPregunta t1_catPregunta6 = get_catPregunta_Ejes(catUna, tema1);
                 tema1.getCatPreguntas().add(t1_catPregunta6);
 
                 cuestionario.getTemas().add(tema1);
@@ -1051,6 +792,9 @@ public class Catalogos {
                                 .add(new CatContenido(null, t3_catPregunta2, "Archivo",
                                                 false, 0));
                 tema3.getCatPreguntas().add(t3_catPregunta2);
+
+                CatPregunta t3_catPregunta3 = get_catPregunta_Semblanza(catArchivo, tema3, CVEMOD,2);
+                tema3.getCatPreguntas().add(t3_catPregunta3);
 
                 cuestionario.getTemas().add(tema3);
 
@@ -1131,61 +875,7 @@ public class Catalogos {
                                 false, 4));
                 tema1.getCatPreguntas().add(t1_catPregunta5);
 
-                CatPregunta t1_catPregunta6 = new CatPregunta(null, "Ejes y líneas temáticas",
-                                "Seleccione la línea temática en que participa", catUna, tema1, true, 5);
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en proyectos de información, de nuevas tecnologías y de software en el sector público.   ",
-                                false, 1));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos sociales: Agenda política, ética y participación.",
-                                false, 2));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos de la economía social y solidaria.",
-                                false, 3));
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Administración de proyectos en el Sector publico.",
-                                false, 4));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Proyectos sociales y participacion ciudadana para la reconstrucción del tejido social.",
-                                false, 5));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "La ética en la construcción de la vivienda digana.",
-                                false, 6));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Responsabilidad ética y compromiso social.",
-                                false, 7));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética de la inteligencia artificial: una nueva tecnología centrada en el ser humano.",
-                                false, 8));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética y Responsabilidad Social en la Dirección de Proyectos Cinematográficos: El Rol del Financiamiento Público",
-                                false, 9));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la toma de decisiones de TIC.",
-                                false, 10));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la toma de decisiones de TIC.",
-                                false, 11));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Ética en la dirección de proyectos sociales y voluntariado.",
-                                false, 12));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Sostenibilidad y Valor Social.",
-                                false, 13));
-
-                t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
-                                "Otra.",
-                                false, 14));
-
+                CatPregunta t1_catPregunta6 = get_catPregunta_Ejes(catUna, tema1);
                 tema1.getCatPreguntas().add(t1_catPregunta6);
 
                 cuestionario.getTemas().add(tema1);
@@ -1248,6 +938,9 @@ public class Catalogos {
                                 .add(new CatContenido(null, t3_catPregunta2, "Archivo",
                                                 false, 0));
                 tema3.getCatPreguntas().add(t3_catPregunta2);
+
+                CatPregunta t3_catPregunta3 = get_catPregunta_Semblanza(catArchivo, tema3, CVEMOD,2);
+                tema3.getCatPreguntas().add(t3_catPregunta3);
 
                 cuestionario.getTemas().add(tema3);
 
@@ -1329,6 +1022,110 @@ public class Catalogos {
                                 false, 4));
                 tema1.getCatPreguntas().add(t1_catPregunta5);
 
+                CatPregunta t1_catPregunta6 = get_catPregunta_Ejes(catUna, tema1);
+                tema1.getCatPreguntas().add(t1_catPregunta6);
+
+                cuestionario.getTemas().add(tema1);
+
+                Tema tema2 = new Tema(null, "Aviso de privacidad y cesión de derechos", cuestionario, 2);
+
+                CatPregunta t2_catPregunta1 = new CatPregunta(null, "¿Ha leído y acepta el  aviso de privacidad?",
+                                "<a href=\"https://www.congreso-unam.org/aviso-de-privacidad\" target='_blank'>Aviso de privacidad</a>",
+                                catSi, tema2, true, 1);
+                t2_catPregunta1.getCatContenido()
+                                .add(new CatContenido(null, t2_catPregunta1, "SI", false, 1));
+                tema2.getCatPreguntas()
+                                .add(t2_catPregunta1);
+
+                CatPregunta t2_catPregunta2 = new CatPregunta(null,
+                                "¿Ha leído y acepta la Carta de Cesión de Derechos ?",
+                                "<a href=\"https://docs.google.com/document/d/1rxiEtVsHvW78kC-C1ClYKk4SOPD1m6lNz7OBHZtvf4o/edit?usp=sharing\" target='_blank'>Carta de Cesión de Derechos </a>",
+                                catSi, tema2, true, 2);
+                t2_catPregunta2.getCatContenido()
+                                .add(new CatContenido(null, t2_catPregunta2, "SI", false, 2));
+                tema2.getCatPreguntas()
+                                .add(t2_catPregunta2);
+
+                CatPregunta t2_catPregunta3 = new CatPregunta(null, "Carta de Cesión de Derechos",
+                                " En esta sección deberá adjuntar su carta. "
+                                                + "El documentos deberá de cumplir con los siguientes lineamientos al nombrar al archivo: "
+                                                + "Para el archivo extensión “.pdf” nombrado del archivo con la siguiente nomenclatura: "
+                                                + "En caso de haber más de un participante, agregar una carta por cada uno de ellos en un solo documento."
+                                                + "codep4_CartaCesion_[ddmmaa]_[apellido paterno_responsable].pdf”",
+                                catArchivo, tema2, true, 3);
+
+                t2_catPregunta3.getCatContenido()
+                                .add(new CatContenido(null, t2_catPregunta3, "Archivo",
+                                                false, 0));
+                tema2.getCatPreguntas()
+                                .add(t2_catPregunta3);
+
+                cuestionario.getTemas().add(tema2);
+
+                Tema tema3 = new Tema(null, "Carga de documentos", cuestionario, 3);
+
+                CatPregunta t3_catPregunta1 = new CatPregunta(null, "Título del cortometraje:",
+                                "Escriba el título de su contrometraje", catTexto, tema3, true, 1);
+                t3_catPregunta1.getCatContenido().add(new CatContenido(null, t3_catPregunta1,
+                                "Texto",
+                                false, 1));
+                tema3.getCatPreguntas().add(t3_catPregunta1);
+
+                CatPregunta t3_catPregunta2 = new CatPregunta(null, "Nombre completo de los participantes:",
+                                "Escriba el nombre de los participantes, separados por una coma, iniciando por el nombre",
+                                catTexto, tema3, true, 2);
+                t3_catPregunta2.getCatContenido().add(new CatContenido(null, t3_catPregunta2,
+                                "Texto",
+                                false, 2));
+                tema3.getCatPreguntas().add(t3_catPregunta2);
+
+                CatPregunta t3_catPregunta3 = new CatPregunta(null, "Formato del cortometraje",
+                                "Seleccione el fomrato", catUna, tema3, true, 3);
+                t3_catPregunta3.getCatContenido().add(new CatContenido(null, t3_catPregunta3,
+                                "Animado", false, 1));
+                t3_catPregunta3.getCatContenido().add(new CatContenido(null, t3_catPregunta3,
+                                "Ficción", false, 2));
+                t3_catPregunta3.getCatContenido().add(new CatContenido(null, t3_catPregunta3,
+                                "Documental",
+                                false, 3));
+                t3_catPregunta3.getCatContenido()
+                                .add(new CatContenido(null, t3_catPregunta3,
+                                                "Otra", true, 3));
+                tema3.getCatPreguntas().add(t3_catPregunta3);
+
+                CatPregunta t3_catPregunta4 = new CatPregunta(null, "Enlace, link o hipervínculo:",
+                                "Recuerde que el video debe de estar precargado en las plataformas de DropBox, Google Drive o OneDrive y deberá estar compartido de manera privada con acceso únicamente con el enlace y seguir los lineamientos del formato",
+                                catTexto, tema3, true, 4);
+                t3_catPregunta4.getCatContenido().add(new CatContenido(null, t3_catPregunta4,
+                                "Texto",
+                                false, 4));
+                tema3.getCatPreguntas().add(t3_catPregunta4);
+
+                CatPregunta t3_catPregunta5 = new CatPregunta(null, "Descripción del cineminuto",
+                                " En esta sección deberá adjuntar su trabajo para participar. Tamaño máximo del archivo 10MB. "
+                                                + "El documento deberá de cumplir con los siguientes lineamientos: plantilla de aacuerdo a la convocatoria y al nombrar al archivo:"
+                                                + "Para el archivo, Word extensión “.docx” nombrado del archivo con la siguiente nomenclatura: "
+                                                + "codep4_" + CVEMOD + "_[ddmmaa]_[apellido paterno].docx”",
+                                catArchivo, tema3, true, 5);
+                t3_catPregunta5.getCatContenido()
+                                .add(new CatContenido(null, t3_catPregunta5, "Archivo",
+                                                false, 5));
+                tema3.getCatPreguntas().add(t3_catPregunta5);
+
+                CatPregunta t3_catPregunta6 = get_catPregunta_Semblanza(catArchivo, tema3, CVEMOD, 6);
+                tema3.getCatPreguntas().add(t3_catPregunta6);
+
+                cuestionario.getTemas().add(tema3);
+
+                try {
+                        cuestionario = cuestionarioRepository.save(cuestionario);
+                } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                }
+
+        }
+
+        private CatPregunta get_catPregunta_Ejes(CatTipoPregunta catUna, Tema tema1) {
                 CatPregunta t1_catPregunta6 = new CatPregunta(null, "Ejes y líneas temáticas",
                                 "Seleccione la línea temática en que participa", catUna, tema1, true, 5);
                 t1_catPregunta6.getCatContenido().add(new CatContenido(null, t1_catPregunta6,
@@ -1384,103 +1181,20 @@ public class Catalogos {
                                 "Otra.",
                                 false, 14));
 
-                tema1.getCatPreguntas().add(t1_catPregunta6);
-
-                cuestionario.getTemas().add(tema1);
-
-                Tema tema2 = new Tema(null, "Aviso de privacidad y cesión de derechos", cuestionario, 2);
-
-                CatPregunta t2_catPregunta1 = new CatPregunta(null, "¿Ha leído y acepta el  aviso de privacidad?",
-                                "<a href=\"https://www.congreso-unam.org/aviso-de-privacidad\" target='_blank'>Aviso de privacidad</a>",
-                                catSi, tema2, true, 1);
-                t2_catPregunta1.getCatContenido()
-                                .add(new CatContenido(null, t2_catPregunta1, "SI", false, 1));
-                tema2.getCatPreguntas()
-                                .add(t2_catPregunta1);
-
-                CatPregunta t2_catPregunta2 = new CatPregunta(null,
-                                "¿Ha leído y acepta la Carta de Cesión de Derechos ?",
-                                "<a href=\"https://docs.google.com/document/d/1rxiEtVsHvW78kC-C1ClYKk4SOPD1m6lNz7OBHZtvf4o/edit?usp=sharing\" target='_blank'>Carta de Cesión de Derechos </a>",
-                                catSi, tema2, true, 2);
-                t2_catPregunta2.getCatContenido()
-                                .add(new CatContenido(null, t2_catPregunta2, "SI", false, 2));
-                tema2.getCatPreguntas()
-                                .add(t2_catPregunta2);
-
-                CatPregunta t2_catPregunta3 = new CatPregunta(null, "Carta de Cesión de Derechos",
-                                " En esta sección deberá adjuntar su carta. "
-                                                + "El documentos deberá de cumplir con los siguientes lineamientos al nombrar al archivo: "
-                                                + "Para el archivo extensión “.pdf” nombrado del archivo con la siguiente nomenclatura: "
-                                                + "En caso de haber más de un participante, agregar una carta por cada uno de ellos en un solo documento."
-                                                + "codep4_CartaCesion_[ddmmaa]_[apellido paterno_responsable].pdf”",
-                                catArchivo, tema2, true, 3);
-
-                t2_catPregunta3.getCatContenido()
-                                .add(new CatContenido(null, t2_catPregunta3, "Archivo",
-                                                false, 0));
-                tema2.getCatPreguntas()
-                                .add(t2_catPregunta3);
-
-                cuestionario.getTemas().add(tema2);
-
-                Tema tema3 = new Tema(null, "Carga de documentos", cuestionario, 3);
-
-                CatPregunta t3_catPregunta1 = new CatPregunta(null, "Título del cortometraje:",
-                                "Escriba el título de su contrometraje", catTexto, tema1, true, 1);
-                t3_catPregunta1.getCatContenido().add(new CatContenido(null, t3_catPregunta1,
-                                "Texto",
-                                false, 1));
-                tema3.getCatPreguntas().add(t3_catPregunta1);
-
-                CatPregunta t3_catPregunta2 = new CatPregunta(null, "Nombre completo de los participantes:",
-                                "Escriba el nombre de los participantes, separados por una coma, iniciando por el nombre",
-                                catTexto, tema3, true, 1);
-                t3_catPregunta2.getCatContenido().add(new CatContenido(null, t3_catPregunta2,
-                                "Texto",
-                                false, 2));
-                tema3.getCatPreguntas().add(t3_catPregunta2);
-
-                CatPregunta t3_catPregunta3 = new CatPregunta(null, "Formato del cortometraje",
-                                "Seleccione el fomrato", catUna, tema3, true, 4);
-                t3_catPregunta3.getCatContenido().add(new CatContenido(null, t3_catPregunta3,
-                                "Animado", false, 1));
-                t3_catPregunta3.getCatContenido().add(new CatContenido(null, t3_catPregunta3,
-                                "Ficción", false, 2));
-                t3_catPregunta3.getCatContenido().add(new CatContenido(null, t3_catPregunta3,
-                                "Documental",
-                                false, 3));
-                t3_catPregunta3.getCatContenido()
-                                .add(new CatContenido(null, t3_catPregunta3,
-                                                "Otra", true, 3));
-                tema3.getCatPreguntas().add(t3_catPregunta3);                                
-
-                CatPregunta t3_catPregunta4 = new CatPregunta(null, "Enlace, link o hipervínculo:",
-                                "Recuerde que el video debe de estar precargado en las plataformas de DropBox, Google Drive o OneDrive y deberá estar compartido de manera privada con acceso únicamente con el enlace y seguir los lineamientos del formato",
-                                catTexto, tema3, true, 1);
-                t3_catPregunta4.getCatContenido().add(new CatContenido(null, t3_catPregunta4,
-                                "Texto",
-                                false, 4));
-                tema3.getCatPreguntas().add(t3_catPregunta4);
-
-                CatPregunta t3_catPregunta5 = new CatPregunta(null, "Descripción del cineminuto",
-                                " En esta sección deberá adjuntar su trabajo para participar. Tamaño máximo del archivo 10MB. "
-                                                + "El documento deberá de cumplir con los siguientes lineamientos: plantilla de aacuerdo a la convocatoria y al nombrar al archivo:"
-                                                + "Para el archivo, Word extensión “.docx” nombrado del archivo con la siguiente nomenclatura: "
-                                                + "codep4_" + CVEMOD + "_[ddmmaa]_[apellido paterno].docx”",
-                                catArchivo, tema3, true, 1);
-                t3_catPregunta5.getCatContenido()
-                                .add(new CatContenido(null, t3_catPregunta5, "Archivo",
-                                                false, 5));
-                tema3.getCatPreguntas().add(t3_catPregunta5);
-
-                cuestionario.getTemas().add(tema3);
-
-                try {
-                        cuestionario = cuestionarioRepository.save(cuestionario);
-                } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                }
-
+                return t1_catPregunta6;
         }
 
+        private CatPregunta get_catPregunta_Semblanza(CatTipoPregunta catArchivo, Tema tema3, String tipoMod, int orden) {
+                // Pregunta Semblanza de los participantes
+                CatPregunta t3_catPregunta3 = new CatPregunta(null, "Semblanza de los participantes en Word",
+                                " En esta sección deberá adjuntar todas las semblanzas en un solo documento. Tamaño máximo del archivo 10MB. "
+                                                + "El documento deberá de cumplir con los siguientes lineamientos: plantilla de aacuerdo a la convocatoria y al nombrar al archivo:"
+                                                + "Para el archivo, PowerPont extensión “.pptx” nombrado del archivo con la siguiente nomenclatura: "
+                                                + "codep4_" + tipoMod + "_SEMBLANZA_[ddmmaa]_[apellido paterno].docx",
+                                catArchivo, tema3, true, orden);
+                t3_catPregunta3.getCatContenido()
+                                .add(new CatContenido(null, t3_catPregunta3, "Archivo",
+                                                false, 0));
+                return t3_catPregunta3;
+        }
 }

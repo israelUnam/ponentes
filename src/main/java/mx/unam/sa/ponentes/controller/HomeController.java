@@ -16,7 +16,6 @@ import mx.unam.sa.ponentes.models.User;
 import mx.unam.sa.ponentes.repository.UserRepository;
 import mx.unam.sa.ponentes.service.CuestionarioService;
 import mx.unam.sa.ponentes.service.NotificacionService;
-import mx.unam.sa.ponentes.service.OAuth2UserService;
 import mx.unam.sa.ponentes.utils.Utils;
 
 @Controller
@@ -25,15 +24,14 @@ public class HomeController {
     private Datosconf datosconf;
     private UserRepository userRepository;
     private NotificacionService notificacionService;
-    private final OAuth2UserService oAuth2UserService;
+
 
     public HomeController(Datosconf datosconf, CuestionarioService cuestionarioService, UserRepository userRepository,
-            NotificacionService notificacionService, OAuth2UserService oAuth2UserService) {
+            NotificacionService notificacionService) {
         this.datosconf = datosconf;
         this.cuestionarioService = cuestionarioService;
         this.userRepository = userRepository;
         this.notificacionService = notificacionService;
-        this.oAuth2UserService = oAuth2UserService;
     }
 
     @GetMapping("/")
