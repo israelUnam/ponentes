@@ -87,7 +87,7 @@
                             <strong><label class="form-label"  th:text="${pregunta.getDesPregunta}"></label> </strong>
                             <input  th:id="@{'file_' + ${pregunta.getIdPregunta}}" type="file" name="files" accept=".pdf,.doc,.docx, .ppt, .pptx" required  th:if="${pregunta.required == 'required'}"/>
                             <input  th:id="@{'file_' + ${pregunta.getIdPregunta}}" type="file" name="files" accept=".pdf,.doc,.docx, .ppt, .pptx"  th:if="${pregunta.required != 'required'}"/>
-                            <p><small><span th:text="${pregunta.getObservaciones}" ></span></small></p>
+                            <p><small><span th:utext="${pregunta.getObservaciones}" ></span></small></p>
                             <label th:id="@{'descfile_' + ${pregunta.getIdPregunta}}">
                            </label>
 

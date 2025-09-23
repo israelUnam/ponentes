@@ -24,7 +24,7 @@
                 <div class="col-md-10 col-lg-12 col-xl-10">
                     <div class="site-heading">
                         <p class="titulo-header" th:utext="${facultad}"></p>
-                        <span class="subheading">Incripción a modalidades de participación</span>
+                        <span class="subheading">Inscripción a modalidades de participación</span>
                     </div>
                 </div>
             </div>
@@ -45,8 +45,8 @@
                         <h2 class="post-title" th:text="${cuestionarios.titulo}"></h2>
                         <h3 class="post-subtitle" th:text="${cuestionarios.subtitulo}"> </h3></a>
 
-                        <span  th:if="${cuestionarios.totalNotificaciones} > 0"><a th:href="@{'/notificaciones/notifica?param=' + ${cuestionarios.parametros}}">Ver notificaciones anteriores <i class="bi bi-clock-fill" style="color:  rgb(12, 53, 124);"></i> </small></a>(<span th:text="${cuestionarios.totalNotificaciones}"></span>)</a></span>
-                        <small  th:if="${cuestionarios.totalNotificaciones} == 0"><a th:href="@{'/notificaciones/notifica?param=' + ${cuestionarios.parametros}}">Ver notificaciones anteriores </a><i class="bi bi-clock"></i></small>
+                        <span  th:if="${cuestionarios.totalNotificaciones} > 0"><a th:href="@{'/notificaciones/notifica?param=' + ${cuestionarios.parametros}}">Ver notificaciones anteriores y modificar documentación <i class="bi bi-clock-fill" style="color:  rgb(12, 53, 124);"></i> </small></a>(<span th:text="${cuestionarios.totalNotificaciones}"></span>)</a></span>
+                        <small  th:if="${cuestionarios.totalNotificaciones} == 0"><a th:href="@{'/notificaciones/notifica?param=' + ${cuestionarios.parametros}}">Ver notificaciones anteriores  y modificar documentación </a><i class="bi bi-clock"></i></small>
 
                     </div>
                     <hr class="my-4" /> 

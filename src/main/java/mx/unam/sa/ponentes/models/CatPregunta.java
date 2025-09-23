@@ -32,7 +32,7 @@ public class CatPregunta {
     private String descripcion;
 
     @Column(length = 500)
-    @Size(max = 500)
+    @Size(max = 700)
     private String observaciones;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)

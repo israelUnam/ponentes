@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.ManyToAny;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
@@ -12,7 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -27,11 +28,13 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany
+    @ManyToMany
     private Set<Authority> authorities;
 
     private String password;
     private String name;
+
+    @Column(length = 500)
     private String picture;
 
     @Column(unique = true)

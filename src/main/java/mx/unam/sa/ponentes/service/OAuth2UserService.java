@@ -58,6 +58,10 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         user.setProviderId(userInfoDto.getId());
         user.setName(userInfoDto.getName());
         user.setUsername(userInfoDto.getEmail());
+
+        if ((userInfoDto.getPicture().length() > 500)) {
+            userInfoDto.setPicture(userInfoDto.getPicture().substring(0, 499));
+        }
         user.setPicture(userInfoDto.getPicture());
         user.setEnabled(true);
         user.setAccountNonExpired(true);
