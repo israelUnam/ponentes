@@ -149,4 +149,17 @@ public class RespuestaService {
     public Respuesta findByRespuestasAndContenido(Long idRespuesta, Long idRespCuestionario, Long idContenido){
         return respuestaRep.findByIdRespuestaAndRespCuestionarioIdRespCuestionarioAndContenidoIdContenido(idRespuesta, idRespCuestionario, idContenido);
     }
+
+    @Transactional
+    public boolean cambiarStatusRespuesta(Long idRespCuestionario, int nuevoStatus) {
+        try {
+            RespCuestionario respuesta = respCuestionarioRep.findById(idRespCuestionario)
+                .orElseThrow(() -> new RuntimeException("Respuesta no encontrada"));
+            respuesta.setStatus(nuevoStatus); 
+            respCuestionarioRep.save(respuesta);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al cambiar el status de la respuesta: " + e.getMessage());
+        }
+    }
 }

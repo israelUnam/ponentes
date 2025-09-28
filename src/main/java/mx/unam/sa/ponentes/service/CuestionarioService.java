@@ -221,6 +221,12 @@ public class CuestionarioService {
         return detalles;
     }
 
+    /**
+     * Cambia todas las repuestas de un idcuestionarios de estatus
+     * @param idCuestionario
+     * @param statusActual
+     * @param statusNuevo
+     */
     public void cambiaStatusCaptura(Long idCuestionario, int statusActual, int statusNuevo) {
         List<RespCuestionario> respCuestionarios = respCuestionarioRep
                 .findByCuestionarioIdCuestionarioAndStatus(idCuestionario, statusActual);
@@ -231,6 +237,8 @@ public class CuestionarioService {
             respCuestionarioRep.save(rc);
         });
     }
+
+
 
     public Cuestionario getCuestionario(Long idCuestionario) {
         return cuestionarioRep.findById(idCuestionario).get();

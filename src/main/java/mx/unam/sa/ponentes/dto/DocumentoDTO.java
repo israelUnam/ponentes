@@ -11,15 +11,17 @@ public class DocumentoDTO {
     Integer idDocto;
     String nombre;
     String tipo;
-    Long idUser;
+    Integer idUser;
     String username;
     String param;
 
-    public DocumentoDTO(Integer idDocto, String nombre, String tipo, Long idUser, String username) {
+    public DocumentoDTO(Integer idDocto, String nombre, String tipo, Integer idUser, String username) {
         this.idDocto = idDocto;
         this.nombre = nombre;
         this.tipo = tipo;
         this.idUser = idUser;
         this.username = username;
     }
+
+    
 }

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.ManyToAny;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;

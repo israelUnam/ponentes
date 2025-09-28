@@ -27,7 +27,9 @@
                             <th>Tipo de Proyecto</th>
                             <th>Capturados </th>
                             <th  style="text-align: center;">En revisión</th>
-                            <th  style="text-align: center;">Avalados/Terminados</th>
+                            <th  style="text-align: center;">Avalados/No Avalados</th>
+
+                            <th  style="text-align: center;" th:if="${isEval}">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,6 +60,14 @@
                             </a>
                             </td>
                         
+                            <td style="text-align: center;" th:if="${isEval}">
+                                <span>
+                                    <a href="#" th:onclick="cambiarStatus([[${cuestionario.param}]],[[${index.count}]])">
+                                        <i class="bi bi-arrow-right-circle-fill h5" data-toggle="tooltip" title="Pasar capturados a revisión";
+                                            style="color: rgb(12, 53, 124);"></i>
+                                    </a>
+                                </span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -117,5 +127,37 @@
                 toast.style.display = "none";
             }
         </script>
+
+        <script>
+        function cambiarStatus(param, index) {
+            var parametros = {
+                "param": param
+            };
+            $.ajax({
+                data: parametros,
+                url: '/evalua/cambiaStatusCaptura',
+                type: 'post',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                },
+                beforeSend: function () {
+                    console.log("Enviando datos...");
+                },
+                success: function (response) {
+                  //console.log(response);  
+                  if(response.status == 1){
+                    document.getElementById('lblTostada').innerHTML = "Se cambio el estado de la captura a revisión";
+                    tostada();
+                    document.getElementById('capt_' + index).innerHTML = response.capturados;
+                    document.getElementById('eval_' + index).innerHTML = response.evaluados;
+                  } else{
+                    document.getElementById('lblTostada').innerHTML = "Fallo al eliminar la solicitud";
+                    tostada();
+                  }
+                    
+                }
+            });
+        }
+    </script>
 </body>
 </html>

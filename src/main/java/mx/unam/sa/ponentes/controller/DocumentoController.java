@@ -17,7 +17,6 @@ import mx.unam.sa.ponentes.models.Documento;
 import mx.unam.sa.ponentes.repository.DocumentoRepo;
 import mx.unam.sa.ponentes.utils.Utils;
 
-
 @Controller
 @RequestMapping("/documento")
 public class DocumentoController {
@@ -27,7 +26,7 @@ public class DocumentoController {
     @Autowired
     Datosconf datosconf;
 
-    @GetMapping(value="/getPdf")
+    @GetMapping(value = "/getPdf")
     @ResponseBody
     public ResponseEntity<byte[]> mostrarPDF(String param) {
 
@@ -38,24 +37,24 @@ public class DocumentoController {
             int idDocto = (int) map.get("idDocto");
 
             Documento documento = documentoRep.findById(idDocto).get();
+            String nomDoc = Utils.removeAccents(documento.getNombre());
 
             byte[] pdfBytes = documento.getData();
-
             HttpHeaders headers = new HttpHeaders();
 
-            if (documento.getTipo().toUpperCase().contains("PDF")){
+            //System.out.println("Tipo de documento: " + documento.getTipo());
+            if (documento.getTipo().toUpperCase().contains("PDF")) {
                 headers.setContentType(MediaType.APPLICATION_PDF);
             }else{
                 headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-                headers.setContentDispositionFormData("inline", documento.getNombre());
+                headers.setContentDispositionFormData("inline", nomDoc);
             }
 
-            
-
-            //headers.setContentDispositionFormData("attachment", documento.getNombre());
+            // headers.setContentDispositionFormData("attachment", documento.getNombre());
 
             return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println("Error al mostrar documento: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

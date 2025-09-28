@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta th:name="_csrf" th:content="${_csrf.token}" />
+    <title>Cuestionarios - Universidad Nacional Autónoma de México</title>
+    <link rel="icon" type="image/x-icon" href="/images/cropped-favicon-1-150x150.jpg" />
+    <headers th:replace="~{components/headers.html :: ~{_headers}}" />
+    <script	src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>    
+
+    <link href="/css/styles.css" rel="stylesheet" />
+
+</head>
+<body id="cabecera">
+    <nav th:replace="~{components/nav.html :: ~{_nav}}" />
+    <!-- Page Header-->
+    <header class="masthead" style="background-image: url('/images/home-bg.jpg'); height: 125px;">
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="text-center">
+                    <h4 class="post-title">Cuestionario: <span th:text="${titulo}"></span> <span th:text="${subtitulo}"></span> 
+                        <span th:if="${externo}"><br />Evaluador Externo</span>
+                    </h4>
+
+                    <h4 class="post-subtitle">Resumen - Folio: <span th:text="${folio}"></span></h4>
+                </div>
+                <div th:each="respuesta, indice :${respuestas}">
+                    <div class="post-preview" >
+                        <p class="post-meta titulo-tema"  th:text="${respuesta.getDescTema}" th:if="${indice.index == 0 ||  respuesta.getDescTema != respuestas[indice.index-1].getDescTema}" > </p>
+                        
+                        <div class="mb-3" th:if="${respuesta.getDesCatalogo} == 'Texto'">
+                            <strong><label class="form-label"  th:text="${respuesta.getDesPregunta}"></label></strong>
+                            <input type="text" class="form-control"  minlength="3" maxlength="300"  th:value="${respuesta.getRespuesta}" disabled >
+                        </div>
+                        <div class="mb-3" th:if="${respuesta.getDesCatalogo} == 'Multiple'">
+                            <strong><p th:if="${respuesta.getIdPregunta != respuestas[indice.index-1].getIdPregunta}" th:text="${respuesta.getDesPregunta}"></p></strong>       
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked th:if="${respuesta.getRespuesta} == '1'" disabled >
+                                <input class="form-check-input" type="checkbox" th:if="${respuesta.getRespuesta} == '0'" disabled>
+                                <label class="form-check-label" th:text="${respuesta.getDesContenido}"></label>
+                                <input type="text" class="form-control"  minlength="3" maxlength="500" th:if="${respuesta.otro}"  disabled th:value="${respuesta.getResp_adicional}">                                
+                              </div>
+                        </div>  
+                        <div class="mb-3" th:if="${respuesta.getDesCatalogo} == 'Una'">
+                            <strong><p th:if="${respuesta.getIdPregunta != respuestas[indice.index-1].getIdPregunta}" th:text="${respuesta.getDesPregunta}"></p></strong>       
+                                <input class="form-check-input" type="radio"  checked th:if="${respuesta.getRespuesta} == '1'" disabled>
+                                <input class="form-check-input" type="radio"  th:if="${respuesta.getRespuesta} == '0'" disabled>
+                                <label class="form-check-label" th:text="${respuesta.getDesContenido}"></label>
+                                <input type="text" class="form-control"  minlength="3" maxlength="500" th:if="${respuesta.otro}" th:title="${respuesta.getResp_adicional}"  disabled th:value="${respuesta.getResp_adicional}">
+                                
+                        </div>
+
+                        <div class="mb-3" th:if="${respuesta.getDesCatalogo} == 'Archivo'">
+                            <span th:if="${respuesta.getRespuesta} != 'sin documento'">
+
+                                <a href="#" th:onclick="@{'openModalPDF(\'/documento/getPdf?param=' + ${#strings.arraySplit(respuesta.getRespuesta, '&')[0]} + '\')'}" data-bs-toggle="modal" data-bs-target="#modalPDF" data-bs-whatever="item 1">
+                                    <span th:text="${#strings.arraySplit(respuesta.getRespuesta, '&')[1]}"></span>
+                                    </a>
+                            </span>
+                        </div>
+
+                        <div class="mb-3" th:if="${respuesta.getDesCatalogo} == 'SI'">
+                            <input class="form-check-input" type="checkbox" checked th:if="${respuesta.getRespuesta} == 'Si'" disabled >
+                            <input class="form-check-input" type="checkbox" checked th:if="${respuesta.getRespuesta} != 'Si'" disabled >
+                            <strong><label class="form-label"  th:text="${respuesta.getDesPregunta}"></label></strong>
+                        </div>
+
+                    </div>
+                    <div th:if="${indice.last || respuesta.getDescTema != respuestas[indice.index+1].getDescTema}">
+                        <div id="ComentarioEvaluadores" th:if="${userRespCuestionario != usuario}"></span>
+                            <div class="alert alert-primary" role="alert">
+                                <div class="row">
+                                    <div class="col-sm-5 col-md-6">Comentarios del evaluador: <span th:text="${usuario}"></span> </div>
+                                    <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0" style="text-align: right;" >
+                                        <button type="button" class="btn btn-primary btn-sm" th:onclick="'habilitaComentario('+${respuesta.idTema}+')'" th:id="@{'btnEditar_' + ${respuesta.idTema} }" disabled><i class="bi bi-pencil"></i></button>
+                                        <button type="button" class="btn btn-primary btn-sm" th:onclick="guardarComentario([[${respuesta.idTema}]],[[${parametro}]])" th:id="@{'btnGuardar_' + ${respuesta.idTema} }" disabled><i class="bi bi-floppy"></i></button>
+                                    </div>
+                                </div> 
+                                <div style="display: none;" th:id="@{'divGuardar_' + ${respuesta.idTema} }">
+                                    <div class="spinner-border text-primary " role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <p>guardando...</p>
+                                </div>    
+                            </div>
+                            <div th:id="@{'div_comentario_' + ${respuesta.idTema} }" style="display: block;">
+                                <div class="d-flex align-items-center">
+                                    <strong role="status">Cargando comentario...</strong>
+                                    <div class="spinner-border ms-auto" aria-hidden="true"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <textarea class="form-control" rows="3" disabled th:id="@{'textTema_' + ${respuesta.idTema}}"></textarea>
+                                <div style="text-align: right; display: none;" th:id="@{'div_badge_' + ${respuesta.idTema}}" >
+                                <span class="badge bg-success" th:id="@{'badge_' + ${respuesta.idTema}}">Guardado exitosamente </span>
+                                </div>
+                            </div>
+                        
+                            <!-- Comentarios de los evaluadores-->
+                            <div th:id="@{'cards_' + ${respuesta.idTema}}" >
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${userRespCuestionario != usuario}">
+                    <div class="col-12 d-flex titulo-tema">
+                        <div class="col-6">
+                        <p class="post-meta my-1" style="text-align: start; font-size: 1.125rem;
+  font-style: italic;">Documentos de los evaluadores </p>
+                    </div>
+                    <div class="col-6">
+                        <span style="cursor: pointer"><a onclick="openModalCotejo();"> <p class="post-meta my-1" style="text-align: end; font-size: 1.125rem;
+  font-style: italic;">Listas de cotejo </p></a></span>
+                    </div>
+                    </div>
+                    <br>
+
+                    
+
+                    <div class="mb-3">
+                        <div class="row" id="div_SinDoctos">
+                            <div class="col-sm-5 col-md-6" th:if="${doctos.size == 0}">
+                                <strong>Sin documentos</strong>
+                            </div>
+                        </div>
+
+                        <div id="div_ConDoctos">
+                            <div class="row" th:each="docto, index : ${doctos}" th:id="@{'doctos_' + ${index.count}}">
+                                <div class="col-sm-5 col-md-9" style="font-size: 14px;">
+                                    <a th:href="@{'/documento/getPdf?param=' + ${docto.param}}" target="_blank">
+                                    <span th:utext="${docto.nombre}"></span></a> - Evaluador:&nbsp;<i th:text="${docto.username}"></i>
+                                </div>
+                                <div class="col-sm-5 offset-sm-2 col-md-3 offset-md-0" style="text-align: right;" th:if="${docto.username} == ${usuario}">
+                                    <a th:onclick="borrarRubrica([[${docto.param}]],[[${index.count}]])"  class='btn btn-primary btn-sm' role='button' target='_blank'><i class='bi bi-trash'></i> Borrar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-sm-5 col-md-10">
+                                <div class="input-group mb-3">
+                                    <input type="file" class="form-control" id="inputGroupFile02">                                
+                                  </div>
+                            </div>
+                            <div class="col-sm-5 offset-sm-2 col-md-2 offset-md-0" style="text-align: right;">
+                                <button type="button" class="btn btn-primary btn-sm" th:onclick="guardaRubrica([[${parametro}]])" id="btnUpload"><i class="bi bi-upload"></i> Subir</button>
+                            </div>
+                            <div class="alert alert-danger" role="alert" id="uploadStatus" style="display: none;">
+                                A simple danger alert—check it out!
+                            </div>
+                            <div class="alert alert-success" role="alert" id="successStatus" style="display: none;">
+                                A simple success alert—check it out!
+                            </div>
+                        </div>
+                    </div>    
+                </div>
+            </div>
+            <p>&nbsp;</p>
+           
+        </div>            
+
+    <!-- Footer-->
+    <foot th:replace="~{components/footer.html :: ~{_footer}}" />
+
+    <script>
+        function habilitaComentario(idTema){
+            var textArea = document.getElementById('textTema_'+idTema);
+            textArea.disabled = false;
+            textArea.focus();
+            var buttonGuardar = document.getElementById('btnGuardar_'+idTema);
+            buttonGuardar.disabled = false;
+            var buttonEditar = document.getElementById('btnEditar_'+idTema);
+            buttonEditar.disabled = true;
+        }
+
+        function guardarComentario(idTema, parametro){
+            //console.log("Guardando comentario");
+            try {
+                var textArea = document.getElementById('textTema_'+idTema);
+                var valTextArea = textArea.value;
+
+                valTextArea = valTextArea.replaceAll("\n", "<br/>");
+                //console.log("Comentario:", valTextArea);
+
+                var divGuardar = document.getElementById('divGuardar_'+idTema);
+                divGuardar.style.display = 'block';
+
+                $.ajax({
+                    url: '/evalua/guardaComentario',
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                    },
+                    data: { param: parametro,
+                            idTema: idTema,
+                            comentario: valTextArea
+                        },
+                    success: function (response) {
+                        //console.log("Respuesta:", response);
+                        //Aquí va el código para eliminar el renglón de la tabla
+                        if (response.status === 1) {
+                            textArea.disabled = true;
+                            var buttonGuardar = document.getElementById('btnGuardar_'+idTema);
+                            buttonGuardar.disabled = true;
+                            var buttonEditar = document.getElementById('btnEditar_'+idTema);
+                            buttonEditar.disabled = false;
+                            document.getElementById('lblTostada').innerHTML = "Se ha guardado el comentario";
+                            tostada();
+                            document.getElementById('badge_'+idTema).innerHTML = "Guardado exitosamente " + response.fechaAct;
+                            document.getElementById('div_badge_'+idTema).style.display = 'block';
+                        }else{
+                            document.getElementById('lblTostada').innerHTML = "Fallo al guardar el comentario: " + response.message;
+                            tostada();
+                        }
+                        divGuardar.style.display = 'none';
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error en la solicitud:", error);
+                        console.error(xhr);
+                        console.error(status);
+                        document.getElementById('lblTostada').innerHTML = "Fallo al guardar el comentario";
+                        tostada();
+                        divGuardar.style.display = 'none';
+                    }
+                });
+            } catch (error) {
+                //console.log("Error en la función guardarComentario:", error);
+                document.getElementById('lblTostada').innerHTML = "Fallo al guardar el comentario";
+                tostada();
+                divGuardar.style.display = 'none';
+            }
+        }
+
+
+    </script>
+
+    <!-- Tostada -->
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="bi bi-rocket-takeoff"> </i>
+                <strong class="me-auto"> Mensajes</strong>
+                <small>En este momento</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"
+                    onclick="apagarTostada()"></button>
+            </div>
+            <div class="toast-body">
+                <label id="lblTostada">Hello, world! This is a toast message.</label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const toastTrigger = document.getElementById('liveToastBtn')
+        const toastLiveExample = document.getElementById('liveToast')
+        if (toastTrigger) {
+            toastTrigger.addEventListener('click', () => {
+                const toast = new bootstrap.Toast(toastLiveExample)
+
+                toast.show()
+            })
+        }
+
+        function tostada() {
+            // Obtener el elemento por su ID
+            var toast = document.getElementById("liveToast");
+            // Hacer visible el elemento
+            toast.style.display = "block";
+
+            setTimeout(function () {
+                apagarTostada();
+            }, 3000);
+        }
+
+        function apagarTostada() {
+            // Obtener el elemento por su ID
+            var toast = document.getElementById("liveToast");
+            // Hacer invisible el elemento
+            toast.style.display = "none";
+        }
+    </script>
+
+    <span th:each="tema : ${idtemas}">
+        <input type="hidden" id="temas" th:value="${tema}" />
+    </span>
+    <input type="hidden" id="parametro" th:value="${parametro}" />
+    <input type="hidden" id="usuario" th:value="${usuario}" />
+    <input type="hidden" id="userRespCuestionario" th:value="${userRespCuestionario}" />
+
+    
+    <!-- Modal para mostrar lista de cotejo-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Listas de cotejo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Seres humanos <a href="/docs/ChecklistEvalCEI_Humanos_FP-25Jun24.docx"> (formato .doc) </a></p>
+                <p>Animales de laboratorio <a href="/docs/CheckList_CICUAL-FORMATO-17enero24.docx"> (formato .doc) </a></p>
+                <p>Residuos <a href="/docs/CheckList_CBioseguridad-17ene24.docx"> (formato .doc) </a></p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPDF" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl ">
+            <div class="modal-content">
+                <div class="modal-body" >
+                    <iframe id="framePDF" style="width: 100%; height: 750px;"></iframe>
+                    </iframe>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="window.open(document.getElementById('framePDF').src, '_blank')">Abrir en otra ventana</button>
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script th:inline="javascript">
+    
+    $( document ).ready(function() {
+
+        console.log( "Document loaded" );
+        var user=document.getElementById('usuario').value;
+        var userRespCuestionario=document.getElementById('userRespCuestionario').value;
+
+        if (userRespCuestionario == user){
+            return;
+        }
+
+        var lostemas = document.getElementById('temas').value;
+        const temas = lostemas.split(",");
+        parametro = document.getElementById('parametro').value;
+
+        console.log("Temas a cargar comentarios: ", temas);
+        console.log("Parametro: ", parametro);
+
+        //Busqueda de comentarios del usuario actual, los otros evaluadores se cargan a continuación
+        temas.forEach(idTema => {
+                console.log("Buscando comentario del usuario actual " + idTema);
+                $.ajax({
+                        url: '/evalua/recuperaComentario',
+                        type: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                        },
+                        data: { param: parametro,
+                                idTema: idTema
+                            },
+                        success: function (response) {
+                            console.log("Respuesta recuperaComentario usuario actual: ", response);                          
+                            if (response.status === 1) {
+                                let divcoment = document.getElementById('div_comentario_'+idTema);
+                                divcoment.style.display = 'none';
+                                let coment = response.comentario.replaceAll("<br/>", "\n");
+                                document.getElementById('textTema_'+idTema).value = coment;
+                                document.getElementById('btnEditar_'+idTema).disabled = false;
+                            }else{
+                                document.getElementById('div_comentario_'+idTema).style.display = 'none'
+                                document.getElementById('textTema_'+idTema).value = "Error al recuperar el comentario, intente de nuevo";	
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error en la solicitud:", error);
+                            console.error(xhr);
+                            console.error(status);
+                            document.getElementById('lblTostada').innerHTML = "Fallo al recuperar el comentario";
+                            tostada();
+                            document.getElementById('div_comentario_'+idTema).style.display = 'none'
+                            document.getElementById('textTema_'+idTema).value = "Error al recuperar el comentario, intente de nuevo";	
+                        }
+                    });
+        });
+
+        //Busqueda de comentarios del otros evaluadores
+
+        temas.forEach(idTema => {
+            console.log("Buscando comentarios de otros evaluadores " + idTema);
+            $.ajax({
+                url: '/evalua/recuperaOtrosComentarios',
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                },
+                data: { param: parametro,
+                        idTema: idTema
+                    },
+                success: function (response) {
+                    console.log("Respuesta Otros:", response);
+                    //Aquí va el código para eliminar el renglón de la tabla
+                    if (response.status === 1) {
+                        response.comentarios.forEach(element => {
+                            
+                            let divCar = "<div class='card'>" + 
+                            "<div class='card-header' style='background-color:#cfe2ff;'>" +
+                               "Comentario de <i>" + element.usuario + "</i> - <i>" + element.fechaAct + "</i>" +
+                            "</div>" +
+                            "<div class='card-body'>" +
+                                "<p class='card-text'>" +  element.comentario + "</p>" +
+                            "</div>" +
+                        "</div><br>";
+                        document.getElementById('cards_'+idTema).innerHTML = document.getElementById('cards_'+idTema).innerHTML + divCar;                            
+                        });
+                    }else{
+                        document.getElementById('cards_'+idTema).innerHTML = "<p>Error al recuperar los comentarios de otros evaluadores</p>";
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error en la solicitud:", error);
+                    console.error(xhr);
+                    console.error(status);
+                    document.getElementById('lblTostada').innerHTML = "Fallo al recuperar el comentario";
+                    tostada();
+                }
+            });
+            
+        });
+    });
+    
+    function guardaRubrica(param){
+        //console.log("Guardando rubrica " + param);
+        let uploadStatus = document.getElementById('uploadStatus');
+        let fileInput = document.getElementById('inputGroupFile02');
+        let uploadButton = document.getElementById('btnUpload');
+        uploadButton.disabled = true;
+        uploadStatus.style.display = 'none';
+
+        let files = fileInput.files;
+        if(files.length === 0){
+            uploadStatus.innerHTML = "No hay archivos para subir";
+            uploadStatus.style.display = 'block';
+            uploadButton.disabled = false;
+            return;
+        }
+        //console.log("Archivo:", files[0])
+
+        let formData = new FormData();
+        formData.append('param', param);
+        formData.append('files', files[0]);
+        $.ajax({
+            url: '/evaluarest/guardaRubrica',
+            type: "POST",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+            },
+            dataType: 'json',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                //console.log("Respuesta:", response);
+
+                if (response.status === 1) {
+                    document.getElementById('div_SinDoctos').style.display = 'none';
+                    divConDoctos = document.getElementById('div_ConDoctos');
+                    divConDoctos.innerHTML += "<div class='row' id='doctos_" + response.idFile + "'>" +
+                                        "<div class='col-sm-5 col-md-9' style='font-size: 14px;'>" +
+                                            "<a href='/documento/getPdf?param=" +  response.paramDocto + "' target='_blank'>" +
+                                            "<span>"+ response.filename + "</a>&nbsp;-&nbsp;Evaluador:&nbsp;<i>" + response.user + " </i></span>" +
+                                        "</div>" +
+                                        "<div class='col-sm-5 offset-sm-2 col-md-3 offset-md-0' style='text-align: right;'>" +
+                                            "<a onclick=\"borrarRubrica('" + response.paramDocto + "'," + response.idFile + ")\"   class='btn btn-primary btn-sm' role='button' target='_blank'><i class='bi bi-trash'></i> Borrar</a>" +
+                                        "</div>" + 
+                                    "</div>";
+                    
+                    uploadButton.disabled = false;
+                    document.getElementById('lblTostada').innerHTML = "Se ha guardado el documento";
+                    tostada();
+                    fileInput.value = '';
+                }else{
+                    uploadButton.disabled = false;
+                    document.getElementById('lblTostada').innerHTML = "Fallo al guardar el documento: " + response.message;
+                    tostada();
+                }
+            },
+            error: function (xhr, status, error) {
+                uploadButton.disabled = false;
+                console.error("Error en la solicitud:", error);
+                console.error(xhr);
+                console.error(status);
+
+                try {
+                    let x = JSON.parse(xhr.responseText);    
+                    document.getElementById('lblTostada').innerHTML = "Fallo al guardar el documento: " + x.error;
+                } catch (error) {
+                    document.getElementById('lblTostada').innerHTML = "Fallo al guardar el documento";    
+                }
+                
+                tostada();
+            }
+        });
+    }
+    
+    function borrarRubrica(param, index){
+        //console.log("Borrando rubrica " + param);
+        $.ajax({
+            url: '/evalua/borraRubrica',
+            type: "POST",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+            },
+            data: { param: param
+                },
+            success: function (response) {
+                //console.log("Respuesta:", response);
+                
+                if (response.status === 1) {
+                    //Aquí va el código para eliminar el renglón de la tabla
+                    document.getElementById('doctos_'+index).remove();
+                    document.getElementById('lblTostada').innerHTML = "Se ha borrado el documento";
+                    tostada();
+                }else{
+                    document.getElementById('lblTostada').innerHTML = "Fallo al borrar el documento: " + response.message;
+                    tostada();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error en la solicitud:", error);
+                console.error(xhr);
+                console.error(status);
+                document.getElementById('lblTostada').innerHTML = "Fallo al borrar el documento";
+                tostada();
+            }
+        });
+    }
+
+    function openModalCotejo(){
+        console.log("Abriendo modal");
+        var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
+            keyboard: false
+        });
+        myModal.show();
+    }
+
+    function openModalPDF(url){
+        //console.log(url);
+        document.getElementById('framePDF').src = url;
+    }
+
+</script>
+</body>
+</html>

@@ -53,7 +53,7 @@ public class CuestionarioController {
     private final Datosconf datosconf;
 
     public CuestionarioController(CuestionarioService cuestionarioService, CatContenidoService catContenidoService,
-            NotificacionService notificaService, UserRepository userRepository, RespuestaService respuestaService, 
+            NotificacionService notificaService, UserRepository userRepository, RespuestaService respuestaService,
             DocumentoService documentoService, RegisterService registerService, Datosconf datosconf) {
         this.cuestionarioService = cuestionarioService;
         this.catContenidoService = catContenidoService;
@@ -97,14 +97,12 @@ public class CuestionarioController {
     public String guardaSolicitud(HttpServletRequest request, @RequestParam("files") MultipartFile[] files,
             Model model, @AuthenticationPrincipal OAuth2User principal) {
 
+        String usermail = principal.getAttribute("email");
         model.addAttribute("name", principal.getAttribute("name"));
         model.addAttribute("email", principal.getAttribute("email"));
         model.addAttribute("picture", principal.getAttribute("picture"));
         model.addAttribute("fallo", false);
         model.addAttribute("avisoprivacidad", datosconf.getAvisoprivacidad());
-
-        User user = userRepository.findByUsername(principal.getAttribute("email"))
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
         // En caso de error se regresan las preguntas con el valor aceptado
         List<SolicitudDTOImp> preguntas = null;
@@ -112,7 +110,11 @@ public class CuestionarioController {
 
         Long idCuestionario = null;
         try {
+            User user = userRepository.findByUsername(principal.getAttribute("email"))
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
             model.addAttribute("idCuestionario", request.getParameter("idCuestionario"));
+
             // Este valor siempre va a estar presente
             idCuestionario = Long.parseLong(Utils.decode(request.getParameter("idCuestionario")));
             Cuestionario cuestionario = cuestionarioService.findById(idCuestionario);
@@ -180,7 +182,7 @@ public class CuestionarioController {
             }
 
             for (MultipartFile file : files) {
-                if (file.getSize() > 4000000) {
+                if (file.getSize() > 16000000) {
                     throw new Exception("El archivo " + file.getOriginalFilename() + " excede el tamaño permitido");
                 }
             }
@@ -213,8 +215,9 @@ public class CuestionarioController {
 
             return new String("redirect:/cuestionario/capturado?param=" + param);
         } catch (Exception e) {
+            System.out.println("Usuario:" + usermail);
             System.out.println(e.getMessage());
-            
+
             // En caso de error, se regresa a la vista de captura con el mensaje de error
             if (idCuestionario != null) {
                 try {
@@ -237,7 +240,7 @@ public class CuestionarioController {
                 }
             } else {
                 // Error no recuperable
-                System.out.println("fallo?error=Fallo al recuperar el cuestionario " + idCuestionario );
+                System.out.println("fallo?error=Fallo al recuperar el cuestionario " + idCuestionario);
                 return "redirect:/fallo?error=Fallo al recuperar el cuestionario&status=500";
             }
             model.addAttribute("mensaje", e.getMessage());
@@ -337,7 +340,7 @@ public class CuestionarioController {
 
             int iddoctoResp = respuesta.getDocumento().getIdDocto();
             log.info("idDocto: " + idDocto + " respuesta.idDocto: " + iddoctoResp);
-            
+
             if (iddoctoResp == idDocto) {
                 Documento documento = new Documento();
                 documento.setIdDocto(idDocto);
@@ -365,11 +368,10 @@ public class CuestionarioController {
                 Map<String, Object> map = new HashMap<>();
                 map.put("idDocto", respuesta.getDocumento().getIdDocto());
 
-                
-                if (nomDocto != null ) {
+                if (nomDocto != null) {
                     extension = nomDocto.substring(nomDocto.lastIndexOf(".") + 1);
                 }
-                
+
                 parametros = Utils.encodeWJT("docto", map, datosconf.getSecretJWT());
 
             } else {
@@ -392,7 +394,7 @@ public class CuestionarioController {
         } catch (Exception e) {
             log.error(e.getMessage());
             String error = e.getMessage();
-            
+
             final String errorSalida = error;
             return ResponseEntity.ok().body(new HashMap<String, Object>() {
                 {

@@ -41,24 +41,31 @@
                           <td th:text="${detalle.usuario}"></td>
                           <td th:text="${detalle.fechaCaptura}"></td>
                           <td style="text-align: center;">
-                            <span th:if="${tipo == 1}">      
+                            <span th:if="${tipo == 1 or (!isEval and tipo == 2)}">      
                                 <a th:href="@{'/cuestionario/capturado?param=' + ${detalle.param}}" target="_blank"><i class="bi bi-eye-fill" 
                                 data-toggle="tooltip" title="Ver solicitud"></i></a>
                             </span>
-                            <!--    
+                            <span th:if="${isEval and tipo == 1}">      
+                                &nbsp;<a href="#" onclick="showRevisionModal(this)" th:data-param="${detalle.param}">
+                                    <i class="bi bi-check-square" data-toggle="tooltip" title="Pasar a Revisión"></i>
+                                </a>
+                            </span>
+                            <!--        
                             <span th:if="${tipo == 1}">      
                               <a href="#" th:onclick="eliminarSolicitud([[${detalle.param}]],[[${index.count}]],[[${detalle.folio}]])">
                                 <i class=" bi bi-trash" data-toggle="tooltip" title="Eliminar solicitud"
                                 style="color: rgb(12, 53, 124);"></i></a>  
                             </span>
                             -->  
-                            <span th:if="${tipo == 2 and detalle.acceso}">
+                            <span th:if="${isEval and tipo == 2}">
                                 <a th:href="@{'/evalua/evaluasolicitud?param=' + ${detalle.param}}" target="_blank">
                                 <i class="bi bi-chat-left-dots"  data-toggle="tooltip" title="Revisar solicitud" style="color: rgb(12, 53, 124);"></i></a> 
                                 &nbsp;
                                 <a href="#" th:onclick="showmodal([[${detalle.folio}]],[[${detalle.param}]],[[${index.count}]])">
                                 <i class="bi bi-wrench" data-toggle="tooltip" title="Cambiar a recomendación" style="color: rgb(12, 53, 124); font-size: 25px;"></i></a>
-                            </span>
+                            </span> 
+
+                            
                           </td>
                       </tr>
                   </tbody>
@@ -92,9 +99,40 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="revisionModal" tabindex="-1" aria-labelledby="revisionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="revisionModalLabel">Confirmar acción</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Se pasará la solicitud a revisión, ¿Está de acuerdo?
+                    <input type="hidden" id="revisionParam">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="pasaRevision()">Aceptar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
     
     <!-- Footer-->
     <foot th:replace="~{components/footer.html :: ~{_footer}}" />
+
+    <!-- Toast container -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Notificación</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastMessage"></div>
+        </div>
+    </div>
 
     <script>
         var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
@@ -311,8 +349,55 @@
                 }
         });
     });
-
   </script>
+
+  <script>
+        const revisionModal = new bootstrap.Modal(document.getElementById('revisionModal'));
+        
+        function showRevisionModal(element) {
+            const param = element.getAttribute('data-param');
+            document.getElementById('revisionParam').value = param;
+            revisionModal.show();
+        }
+        
+        function pasaRevision() {
+            const param = document.getElementById('revisionParam').value;
+            console.log('pasa a revisión', param);
+
+                $.ajax({
+                    url: '/evalua/cambiarecomendacion?param=' + encodeURIComponent(param),
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                    },  
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.status === 1) {
+                            const row = document.querySelector(`a[data-param="${param}"]`).closest('tr');
+                            row.remove();
+                            showToast("Solicitud pasada a revisión con éxito.");
+                        } else {
+                            showToast("Fallo al pasar a revisión: " + response.mensaje);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error en la solicitud:", error);
+                        showToast("Error al procesar la solicitud");
+                    }
+            });
+            revisionModal.hide();
+        }
+    </script>
+
+    <script>
+        function showToast(message) {
+            const toastElement = document.getElementById('liveToast');
+            const toast = new bootstrap.Toast(toastElement);
+            document.getElementById('toastMessage').textContent = message;
+            toast.show();
+        }
+    </script>
 
 </body>
 </html>

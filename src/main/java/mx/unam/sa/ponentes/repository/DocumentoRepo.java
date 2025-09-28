@@ -6,14 +6,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import mx.unam.sa.ponentes.dto.DocumentoDTO;
 import mx.unam.sa.ponentes.models.Documento;
 
 
 
 @Repository
 public interface DocumentoRepo extends JpaRepository<Documento, Integer> {
-    //@Query("SELECT new mx.unam.sa.ponentes.dto.DocumentoDTO(d.idDocto, d.nombre, d.tipo, d.user.id, d.user.username) FROM Documento d WHERE d.idDocto in (?1)")
-    //List<DocumentoDTO> getDatosDocto(Integer[] idDocto);
+    @Query("SELECT new mx.unam.sa.ponentes.dto.DocumentoDTO(d.idDocto, d.nombre, d.tipo, d.user.id, d.user.username) FROM Documento d WHERE d.idDocto in (?1)")
+    List<DocumentoDTO> getDatosDocto(Integer[] idDocto);
 
     @Modifying
     @Query(value = "insert INTO respcuest_doctos_rub (id_resp_cuestionario, id_docto) values (?1,?2)", nativeQuery = true)

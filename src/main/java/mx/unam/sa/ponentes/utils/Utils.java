@@ -161,12 +161,12 @@ public class Utils {
         if (decode == null || decode.trim().isEmpty()) {
             return paramMap;
         }
-        
+
         String valor = decode(decode);
         if (valor == null) {
             return paramMap;
         }
-        
+
         String[] params = valor.split("&");
         for (String dato : params) {
             if (dato != null && dato.contains("=")) {
@@ -250,7 +250,8 @@ public class Utils {
     }
 
     /**
-     * Convierte entidades HTML de acentos (como &aacute;) a sus caracteres normales.
+     * Convierte entidades HTML de acentos (como &aacute;) a sus caracteres
+     * normales.
      *
      * @param texto El texto con entidades HTML.
      * @return El texto con acentos normales.
@@ -260,19 +261,34 @@ public class Utils {
             return null;
         }
         return texto
-            .replace("&aacute;", "á")
-            .replace("&eacute;", "é")
-            .replace("&iacute;", "í")
-            .replace("&oacute;", "ó")
-            .replace("&uacute;", "ú")
-            .replace("&Aacute;", "Á")
-            .replace("&Eacute;", "É")
-            .replace("&Iacute;", "Í")
-            .replace("&Oacute;", "Ó")
-            .replace("&Uacute;", "Ú")
-            .replace("&ntilde;", "ñ")
-            .replace("&Ntilde;", "Ñ")
-            .replace("&uuml;", "ü")
-            .replace("&Uuml;", "Ü");
+                .replace("&aacute;", "á")
+                .replace("&eacute;", "é")
+                .replace("&iacute;", "í")
+                .replace("&oacute;", "ó")
+                .replace("&uacute;", "ú")
+                .replace("&Aacute;", "Á")
+                .replace("&Eacute;", "É")
+                .replace("&Iacute;", "Í")
+                .replace("&Oacute;", "Ó")
+                .replace("&Uacute;", "Ú")
+                .replace("&ntilde;", "ñ")
+                .replace("&Ntilde;", "Ñ")
+                .replace("&uuml;", "ü")
+                .replace("&Uuml;", "Ü");
+    }
+
+    /**
+     * Removes all diacritical marks (accents) from a string.
+     * For example: "áéíóú" becomes "aeiou"
+     *
+     * @param str The string to remove accents from
+     * @return The string without accents
+     */
+    public static String removeAccents(String str) {
+        if (str == null) {
+            return null;
+        }
+        String normalizedString = java.text.Normalizer.normalize(str, java.text.Normalizer.Form.NFD);
+        return normalizedString.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 }

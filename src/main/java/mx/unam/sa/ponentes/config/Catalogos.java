@@ -809,14 +809,13 @@ public class Catalogos {
 
         }
 
+        @SuppressWarnings("unused")
         private void cuestionario_artículosInvestigación() {
                 System.out.println("Creando cuestionario articulo de investigación...");
 
                 CatTipoPregunta catTexto = catTipoPreguntaRepository.findById(1).get();
-                @SuppressWarnings("unused")
                 CatTipoPregunta catMultiple = catTipoPreguntaRepository.findById(2).get();
                 CatTipoPregunta catUna = catTipoPreguntaRepository.findById(3).get();
-                @SuppressWarnings("unused")
                 CatTipoPregunta catSinResp = catTipoPreguntaRepository.findById(4).get();
                 CatTipoPregunta catArchivo = catTipoPreguntaRepository.findById(5).get();
                 CatTipoPregunta catSi = catTipoPreguntaRepository.findById(6).get();
@@ -1142,14 +1141,13 @@ public class Catalogos {
         }
 
 
-         private void cuestionario_conversatorio() {
+         @SuppressWarnings("unused")
+        private void cuestionario_conversatorio() {
                 System.out.println("Creando cuestionario conversatorio...");
 
                 CatTipoPregunta catTexto = catTipoPreguntaRepository.findById(1).get();
-                @SuppressWarnings("unused")
                 CatTipoPregunta catMultiple = catTipoPreguntaRepository.findById(2).get();
                 CatTipoPregunta catUna = catTipoPreguntaRepository.findById(3).get();
-                @SuppressWarnings("unused")
                 CatTipoPregunta catSinResp = catTipoPreguntaRepository.findById(4).get();
                 CatTipoPregunta catArchivo = catTipoPreguntaRepository.findById(5).get();
                 CatTipoPregunta catSi = catTipoPreguntaRepository.findById(6).get();
