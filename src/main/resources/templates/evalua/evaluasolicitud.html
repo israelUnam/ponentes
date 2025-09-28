@@ -57,10 +57,20 @@
 
                         <div class="mb-3" th:if="${respuesta.getDesCatalogo} == 'Archivo'">
                             <span th:if="${respuesta.getRespuesta} != 'sin documento'">
+                                <span th:if="${#strings.endsWith(#strings.arraySplit(respuesta.getRespuesta, '&')[1], '.pdf')}">
 
                                 <a href="#" th:onclick="@{'openModalPDF(\'/documento/getPdf?param=' + ${#strings.arraySplit(respuesta.getRespuesta, '&')[0]} + '\')'}" data-bs-toggle="modal" data-bs-target="#modalPDF" data-bs-whatever="item 1">
                                     <span th:text="${#strings.arraySplit(respuesta.getRespuesta, '&')[1]}"></span>
-                                    </a>
+                                </a>
+                                </span>
+
+                                <span th:unless="${#strings.endsWith(#strings.arraySplit(respuesta.getRespuesta, '&')[1], '.pdf')}">
+
+                                <a th:href="@{'/documento/getPdf?param=' + ${#strings.arraySplit(respuesta.getRespuesta, '&')[0]} }" target="_blank">
+                                    <span th:text="${#strings.arraySplit(respuesta.getRespuesta, '&')[1]}"></span>
+                                </a>
+                                </span>
+
                             </span>
                         </div>
 
@@ -113,10 +123,6 @@
                         <p class="post-meta my-1" style="text-align: start; font-size: 1.125rem;
   font-style: italic;">Documentos de los evaluadores </p>
                     </div>
-                    <div class="col-6">
-                        <span style="cursor: pointer"><a onclick="openModalCotejo();"> <p class="post-meta my-1" style="text-align: end; font-size: 1.125rem;
-  font-style: italic;">Listas de cotejo </p></a></span>
-                    </div>
                     </div>
                     <br>
 
@@ -135,7 +141,7 @@
                                     <a th:href="@{'/documento/getPdf?param=' + ${docto.param}}" target="_blank">
                                     <span th:utext="${docto.nombre}"></span></a> - Evaluador:&nbsp;<i th:text="${docto.username}"></i>
                                 </div>
-                                <div class="col-sm-5 offset-sm-2 col-md-3 offset-md-0" style="text-align: right;" th:if="${docto.username} == ${usuario}">
+                                <div class="col-sm-5 offset-sm-2 col-md-3 offset-md-0" style="text-align: right;" th:if="${docto.username} == ${email}">
                                     <a th:onclick="borrarRubrica([[${docto.param}]],[[${index.count}]])"  class='btn btn-primary btn-sm' role='button' target='_blank'><i class='bi bi-trash'></i> Borrar</a>
                                 </div>
                             </div>
@@ -296,26 +302,6 @@
     <input type="hidden" id="userRespCuestionario" th:value="${userRespCuestionario}" />
 
     
-    <!-- Modal para mostrar lista de cotejo-->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Listas de cotejo</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Seres humanos <a href="/docs/ChecklistEvalCEI_Humanos_FP-25Jun24.docx"> (formato .doc) </a></p>
-                <p>Animales de laboratorio <a href="/docs/CheckList_CICUAL-FORMATO-17enero24.docx"> (formato .doc) </a></p>
-                <p>Residuos <a href="/docs/CheckList_CBioseguridad-17ene24.docx"> (formato .doc) </a></p>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="modalPDF" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl ">
             <div class="modal-content">

@@ -145,6 +145,8 @@
         $(document).ready(function () {
             $(".btn-info").click(function () {
                 $('#customFile').val('');
+                // Re-enable submit button when opening modal
+                document.querySelector('[onclick="submitForm()"]').disabled = false;
 
                 let info = $(this).data('info');
                 let data = info.split(',');
@@ -162,22 +164,27 @@
             console.log("Form submitted");
             event.preventDefault(); // Prevent default form submission
 
+            // Disable submit button
+            const submitButton = document.querySelector('[onclick="submitForm()"]');
+            submitButton.disabled = true;
+
             var file = $('#customFile')[0].files[0];
             var param = $('#idDocto').val();
-
-            console.log("param", param );
 
             // Check if file is selected
             if (!file) {
                 $('#mensajeModal').html("Por favor selecciona un archivo.");
                 $('#mensajeModal').show();
+                submitButton.disabled = false;
                 return;
             }
+            
             // Get form data
             var formData = new FormData();
             formData.append('files', file );
             formData.append('param', param);
-             // Send AJAX request
+            
+            // Send AJAX request
             $.ajax({
                 url: "reemplazaArchivo",
                 type: "POST",
@@ -211,9 +218,10 @@
                 },
                 error: function(xhr, status, error) {
                     // Handle error response
-                    console.log(xhr.responseText);
-                    $('#mensajeModal').html("Error al subir el archivo.");
+                    console.log(xhr.responseText + ":" + status + ":" + error);
+                    $('#mensajeModal').html("Error al subir el archivo. Tamaño Máximo 32 MB.");
                     $('#mensajeModal').show();
+                    submitButton.disabled = false;
                 }
             });
         }

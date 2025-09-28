@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import mx.unam.sa.ponentes.config.Datosconf;
 import mx.unam.sa.ponentes.dto.DocumentoDTO;
 import mx.unam.sa.ponentes.models.Documento;
+import mx.unam.sa.ponentes.models.User;
 import mx.unam.sa.ponentes.repository.DocumentoRepo;
 import mx.unam.sa.ponentes.utils.Utils;
 
@@ -42,7 +43,7 @@ public class DocumentoService {
     }
 
     @Transactional
-    public Documento saveRubrica(MultipartFile file, Long idRespCuestionario, String UserName) {
+    public Documento saveRubrica(MultipartFile file, Long idRespCuestionario, User user) {
 
         try {
 
@@ -52,6 +53,7 @@ public class DocumentoService {
             documento.setTipo(file.getContentType());
             documento.setData(file.getBytes());
             documento.setSize((int) file.getSize());
+            documento.setUser(user);
             documento = documentoRep.save(documento);
             documentoRep.updateRespcuestDoctosRub(idRespCuestionario, documento.getIdDocto());
 

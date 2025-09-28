@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import mx.unam.sa.ponentes.config.Datosconf;
 import mx.unam.sa.ponentes.dto.ComentariosDTO;
 import mx.unam.sa.ponentes.dto.CuesEvaluaDTO;
@@ -23,12 +22,14 @@ import mx.unam.sa.ponentes.dto.CuestDetalleDTO;
 import mx.unam.sa.ponentes.dto.DocumentoDTO;
 import mx.unam.sa.ponentes.dto.SolicitudDTOImp;
 import mx.unam.sa.ponentes.models.ComentariosSimple;
+import mx.unam.sa.ponentes.models.Documento;
 import mx.unam.sa.ponentes.models.User;
 import mx.unam.sa.ponentes.repository.ComentariosSimpleRepo;
 import mx.unam.sa.ponentes.repository.RespCuestionarioRepo;
 import mx.unam.sa.ponentes.repository.UserRepository;
 import mx.unam.sa.ponentes.service.ComentarioService;
 import mx.unam.sa.ponentes.service.CuestionarioService;
+import mx.unam.sa.ponentes.service.DocumentoService;
 import mx.unam.sa.ponentes.service.RespEvaluadorService;
 import mx.unam.sa.ponentes.service.RespuestaService;
 import mx.unam.sa.ponentes.utils.Utils;
@@ -46,11 +47,12 @@ public class EvaluaController {
     private final RespEvaluadorService respEvaluadorService;
     private final ComentarioService comentarioService;
     private final ComentariosSimpleRepo comentariosSimpleRepo;
+    private final DocumentoService documentoService;
 
     public EvaluaController(CuestionarioService cuestionarioService, RespCuestionarioRepo respCuestionarioRepo,
             Datosconf datosconf, UserRepository userRepository, RespuestaService respuestaService,
             RespEvaluadorService respEvaluadorService, ComentarioService comentarioService,
-            ComentariosSimpleRepo comentariosSimpleRepo) {
+            ComentariosSimpleRepo comentariosSimpleRepo, DocumentoService documentoService) {
         this.cuestionarioService = cuestionarioService;
         this.respCuestionarioRepo = respCuestionarioRepo;
         this.datosconf = datosconf;
@@ -59,6 +61,7 @@ public class EvaluaController {
         this.respEvaluadorService = respEvaluadorService;
         this.comentarioService = comentarioService;
         this.comentariosSimpleRepo = comentariosSimpleRepo;
+        this.documentoService = documentoService;
     }
 
     @RequestMapping("/listcuestionarios")
@@ -174,6 +177,7 @@ public class EvaluaController {
                     put("status", 2);
                 }
             });
+
         }
     }
 
@@ -220,6 +224,7 @@ public class EvaluaController {
                     put("status", 2);
                 }
             });
+
         }
     }
 
@@ -254,6 +259,7 @@ public class EvaluaController {
                     put("status", 2);
                 }
             });
+
         }
     }
 
@@ -287,6 +293,7 @@ public class EvaluaController {
                     put("status", 2);
                 }
             });
+
         }
     }
 
@@ -324,14 +331,21 @@ public class EvaluaController {
                     put("status", 2);
                 }
             });
+
         }
 
     }
 
     @RequestMapping(value = "/evaluasolicitud")
-    public String evaluasolicitud(@RequestParam String param, Model model) {
+    public String evaluasolicitud(@RequestParam String param, Model model,
+            @AuthenticationPrincipal OAuth2User principal) {
 
         try {
+
+            model.addAttribute("name", principal.getAttribute("name"));
+            model.addAttribute("email", principal.getAttribute("email"));
+            model.addAttribute("picture", principal.getAttribute("picture"));
+            model.addAttribute("avisoprivacidad", datosconf.getAvisoprivacidad());
 
             Map<String, Object> entrada = Utils.getMapDecode(param);
             Long idResp = Long.parseLong(entrada.get("idRespCuestionario").toString());
@@ -361,7 +375,7 @@ public class EvaluaController {
             doctos.stream().forEach(doctoDto -> {
                 Map<String, Object> map = new HashMap<>();
                 map.put("idDocto", doctoDto.getIdDocto());
-                doctoDto.setParam(Utils.encodeWJT("docto", map, "AxRwYWESR"));
+                doctoDto.setParam(Utils.encodeWJT("docto", map, datosconf.getSecretJWT()));
             });
 
             // Este permite identificar si el usuario actual (evaluador) es el mismo que
@@ -385,6 +399,54 @@ public class EvaluaController {
             return new String("/error");
         }
 
+    }
+
+    @RequestMapping(value = "/borraRubrica", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<HashMap<String, Object>> borraRubrica(@RequestParam String param,
+            @AuthenticationPrincipal OAuth2User principal) {
+
+        try {
+
+            User user = userRepository.findByUsername(principal.getAttribute("email"))
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            Boolean isEval = user.getAuthorities().stream()
+                    .anyMatch(authority -> authority.getAuthority().equals("ROLE_EVAL"));
+
+            if (!isEval) {
+                throw new RuntimeException("No tienes permisos para borrar este documento");
+            }
+
+            Map<String, Object> map = Utils.decodeJWT("docto", param, datosconf.getSecretJWT());
+            int idDocto = (int) map.get("idDocto");
+
+            Documento documento = documentoService.findDocumentobyId(idDocto);
+
+            if (documento == null) {
+                throw new RuntimeException("Documento no encontrado");
+            }
+
+            if (!documento.getUser().getId().equals(user.getId())) {
+                throw new RuntimeException("No tienes permisos para borrar este documento");
+            }
+
+            documentoService.deleteRubricaByIdDocto(idDocto);
+
+            return ResponseEntity.ok().body(new HashMap<String, Object>() {
+                {
+                    put("mensaje", "Exito");
+                    put("status", 1);
+                }
+            });
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.ok().body(new HashMap<String, Object>() {
+                {
+                    put("mensaje", e.getMessage());
+                    put("status", 2);
+                }
+            });
+        }
     }
 
 }

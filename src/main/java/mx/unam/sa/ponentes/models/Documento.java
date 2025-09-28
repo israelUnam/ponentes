@@ -24,7 +24,7 @@ public class Documento {
     private Integer idDocto;
 
     @Lob
-    @Column(length = 16777215)
+    @Column(length = 33554430)
     private byte[] data;
 
     int size;

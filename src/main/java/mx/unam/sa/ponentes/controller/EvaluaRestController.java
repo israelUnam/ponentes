@@ -6,18 +6,20 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import mx.unam.sa.ponentes.config.Datosconf;
 import mx.unam.sa.ponentes.models.Documento;
+import mx.unam.sa.ponentes.models.User;
+import mx.unam.sa.ponentes.repository.UserRepository;
 import mx.unam.sa.ponentes.service.DocumentoService;
 import mx.unam.sa.ponentes.utils.Utils;
-
 
 @RestController
 @PreAuthorize("hasAnyRole('ROLE_EVAL', 'ROLE_ADMIN')")
@@ -25,30 +27,36 @@ import mx.unam.sa.ponentes.utils.Utils;
 public class EvaluaRestController {
     @Autowired
     DocumentoService documentoService;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    Datosconf datosconf;
 
     @RequestMapping(value = "/guardaRubrica", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<HashMap<String, Object>> guardaRubrica(@RequestParam String param,
-            @RequestParam("files") MultipartFile[] files) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String usuario = authentication.getName();
+            @RequestParam("files") MultipartFile[] files, @AuthenticationPrincipal OAuth2User principal) {
 
         try {
+
+            User user = userRepository.findByUsername(principal.getAttribute("email"))
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
             Map<String, Object> entrada = Utils.getMapDecode(param);
             Long idResp = Long.parseLong(entrada.get("idRespCuestionario").toString());
 
-            Documento documento = documentoService.saveRubrica(files[0], idResp, usuario);
+            Documento documento = documentoService.saveRubrica(files[0], idResp, user);
 
             String paramDocto = Utils.encodeWJT("docto", new HashMap<String, Object>() {
                 {
                     put("idDocto", documento.getIdDocto());
                 }
-            }, "AxRwYWESR");
+            },  datosconf.getSecretJWT());
 
             return ResponseEntity.ok().body(new HashMap<String, Object>() {
                 {
                     put("idFile", documento.getIdDocto());
                     put("filename", documento.getNombre());
-                    put("user", usuario);
+                    put("user", user.getUsername());
                     put("paramDocto", paramDocto);
                     put("mensaje", "Exito");
                     put("status", 1);
@@ -66,8 +74,9 @@ public class EvaluaRestController {
     }
 
     // @ExceptionHandler(MaxUploadSizeExceededException.class)
-    // public ResponseEntity<String> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
+    // public ResponseEntity<String>
+    // handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
 
-    //     return ResponseEntity.ok().body("El archivo excede el límite permitido");
+    // return ResponseEntity.ok().body("El archivo excede el límite permitido");
     // }
 }

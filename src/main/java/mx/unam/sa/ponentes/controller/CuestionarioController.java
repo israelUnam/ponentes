@@ -182,8 +182,8 @@ public class CuestionarioController {
             }
 
             for (MultipartFile file : files) {
-                if (file.getSize() > 16000000) {
-                    throw new Exception("El archivo " + file.getOriginalFilename() + " excede el tamaño permitido");
+                if (file.getSize() > 32000000) {
+                    throw new Exception("El archivo " + file.getOriginalFilename() + " excede el tamaño permitido 32 MB");
                 }
             }
 
