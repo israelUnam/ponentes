@@ -111,8 +111,8 @@ public class CuestionarioService {
             ced.setSubtitulo(c.getSubtitulo());
             ced.setCapturados(0);
             ced.setEvaluados(0);
-            ced.setDictamenincompleto(0);
-            ced.setTerminados(0);
+            ced.setAvalados(0);
+            ced.setNoAvalados(0);
             cuestionariosSal.add(ced);
         });
 
@@ -131,8 +131,8 @@ public class CuestionarioService {
             ced.setSubtitulo(c.getSubtitulo());
             ced.setCapturados(0);
             ced.setEvaluados(0);
-            ced.setDictamenincompleto(0);
-            ced.setTerminados(0);
+            ced.setAvalados(0);
+            ced.setNoAvalados(0);
             cuestionariosSal.add(ced);
         });
 

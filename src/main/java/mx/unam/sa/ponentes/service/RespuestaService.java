@@ -156,7 +156,12 @@ public class RespuestaService {
             RespCuestionario respuesta = respCuestionarioRep.findById(idRespCuestionario)
                 .orElseThrow(() -> new RuntimeException("Respuesta no encontrada"));
             respuesta.setStatus(nuevoStatus); 
+            
+            if (nuevoStatus == 4 || nuevoStatus == 5) { // Si el nuevo estatus es "Aval" o "No aval"
+                respuesta.setFechaTerminado(new java.util.Date()); // Establece la fecha de terminado
+            }
             respCuestionarioRep.save(respuesta);
+
             return true;
         } catch (Exception e) {
             throw new RuntimeException("Error al cambiar el status de la respuesta: " + e.getMessage());

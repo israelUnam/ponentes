@@ -9,7 +9,8 @@ public class CuesEvaluaDTO {
     private String subtitulo;
     int capturados;
     int evaluados;
-    int dictamenincompleto;
-    int terminados;
+    int avalados;
+    int noAvalados;
+
     String param;
 }

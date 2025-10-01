@@ -62,7 +62,7 @@
                                 <i class="bi bi-chat-left-dots"  data-toggle="tooltip" title="Revisar solicitud" style="color: rgb(12, 53, 124);"></i></a> 
                                 &nbsp;
                                 <a href="#" th:onclick="showmodal([[${detalle.folio}]],[[${detalle.param}]],[[${index.count}]])">
-                                <i class="bi bi-wrench" data-toggle="tooltip" title="Cambiar a recomendación" style="color: rgb(12, 53, 124); font-size: 25px;"></i></a>
+                                <i class="bi bi-wrench" data-toggle="tooltip" title="Terminar recomendación" style="color: rgb(12, 53, 124); font-size: 25px;"></i></a>
                             </span> 
 
                             
@@ -119,7 +119,50 @@
             </div>
         </div>
     </div>
-    
+
+    <!-- Modal Recomendación -->
+    <div class="modal fade" id="recomendacionModal" tabindex="-1" aria-labelledby="recomendacionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recomendacionModalLabel">Terminar revisión - Folio: <span id="folioSpan"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Seleccione una opción:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="avalOption" id="avalSi" value="1">
+                            <label class="form-check-label" for="avalSi">Aval</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="avalOption" id="avalNo" value="0">
+                            <label class="form-check-label" for="avalNo">No aval</label>
+                        </div>
+                        <br/>
+                        <label class="form-label">Observaciones:</label>
+                        <textarea class="form-control" id="observacionesRecom" rows="3"></textarea>
+                        <br/>
+                        <label class="form-label">Proporcione la causa del aval o no aval</label>
+                        <div id="spinnerRecom" class="text-center" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Procesando...</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="paramRecom">
+                        <input type="hidden" id="rowIndex">
+                        <label id="advertenciaLabel" class="text-warning" style="display: none;"></label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="guardarTerminacion()">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer-->
     <foot th:replace="~{components/footer.html :: ~{_footer}}" />
 
@@ -202,154 +245,10 @@
             });
         }
     </script>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Cambio de solicitud a recomendación. Folio <span id="folio"></span> </h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="mb-3">                
-                    <label class="form-label">Observaciones a mostrar al responsable.</label>
-                    <label class="form-label">La observación y el documento seran mostrados al responsable del proyecto para que de continuidad a lo solicitado por los evaluadores.</label>
-                    <textarea class="form-control" id="observaciones" rows="3"></textarea>
-                    <label for="formFileMultiple" class="form-label">Agregue los archivos que va a asociar</label>
-                    <input class="form-control" type="file" id="formFileMultiple" multiple>
+ 
 
-                    <br />
-                    <label class="form-label">Se enviara un correo de notificación al responsable del proyecto</label>
-
-                    
-                    <div id="spinner" class="text-center" style="display: none;">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Cargando...</span>
-                        </div>
-                        <p>Enviando correo, por favor espere...</p>
-                    </div>
-
-                    <input type="hidden" id="paramsFolio">  
-                    <input type="hidden" id="idRenglon">  
-                    <br>
-                    <div class="alert alert-danger" role="alert" id="uploadStatus" style="display: none;">
-                        A simple danger alert—check it out!
-                    </div>
-                    <div class="alert alert-success" role="alert" id="successStatus" style="display: none;">
-                        A simple success alert—check it out!
-                      </div>
-                
-            </div>
-        </div>
-        <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="uploadButton">Guardar</button>
-        </div>
-      </div>
-    </div>
   </div>
-  
-  <script>
 
-    function showmodal(folio, param, idRenglon){
-        //console.log("showmodal: " + id);
-      
-        let fileInput = document.getElementById('formFileMultiple');
-        fileInput.value = '';
-        document.getElementById('observaciones').value = '';
-        document.getElementById('observaciones').disabled = false;
-        document.getElementById('formFileMultiple').disabled = false;
-        document.getElementById('uploadStatus').style.display = 'none';
-        document.getElementById('successStatus').style.display = 'none';
-        document.getElementById('folio').innerHTML = folio;
-        document.getElementById('paramsFolio').value = param;
-        document.getElementById('idRenglon').value = idRenglon;
-        var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
-        })
-        myModal.show();
-    }
-
-    let fileInput = document.getElementById('formFileMultiple');
-    let uploadButton = document.getElementById('uploadButton');
-    let uploadStatus = document.getElementById('uploadStatus');
-    let successStatus = document.getElementById('successStatus');
-    
-
-    uploadButton.addEventListener('click', () => {
-        //console.log("Subiendo archivo...");
-
-        document.getElementById('spinner').style.display = 'block';
-
-        uploadButton.disabled = true;
-        let formData = new FormData();
-        let files = fileInput.files;
-
-        if(files.length === 0){
-            uploadStatus.innerHTML = "No hay archivos para subir";
-            uploadStatus.style.display = 'block';
-            uploadButton.disabled = false;
-            document.getElementById('spinner').style.display = 'none';
-            return;
-        }
-
-        if(document.getElementById('observaciones').value === ""){
-            uploadStatus.innerHTML = "Debe agregar observaciones";
-            uploadStatus.style.display = 'block';
-            uploadButton.disabled = false;
-            document.getElementById('spinner').style.display = 'none';
-            return;
-        }
-
-        for (let i = 0; i < files.length; i++) {
-            //console.log("Archivo:", files[i]);
-            formData.append('files', files[i]);
-        }
-
-        let observaciones = document.getElementById('observaciones').value;
-        observaciones = observaciones.replace(/(?:\r\n|\r|\n)/g, '<br>');
-        formData.append('observaciones',observaciones);
-        formData.append('param', document.getElementById('paramsFolio').value);
-        formData.append('accion', 'observacion');
-        $.ajax({
-                url: '/recomendacionRest/guardaSolicitudRevision',
-                type: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
-                },  
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    //console.log("Respuesta:", response);
-                    if (response.status === 1) {
-                        uploadStatus.style.display = 'none';
-                        let idRenglon = document.getElementById('idRenglon').value;
-                        //console.log("idRenglon: ", idRenglon);
-                        let table = document.getElementById("tablaSolicitud");
-                        let row = document.getElementById("renglon_" + idRenglon);
-                        row.parentNode.deleteRow(row.rowIndex - 1);
-                        successStatus.innerHTML = "Datos cargados con éxito, el documento cambia a recomendación por el responsable del proyecto.";
-                        successStatus.style.display = 'block';
-                        document.getElementById('observaciones').disabled = true;
-                        document.getElementById('formFileMultiple').disabled = true;
-                    }else{
-                        uploadButton.disabled = false;
-                        uploadStatus.innerHTML = "Fallo al cargar los datos: " + response.mensaje;
-                        uploadStatus.style.display = 'block';
-                    }
-                    document.getElementById('spinner').style.display = 'none';
-                },
-                error: function (xhr, status, error) {
-                    uploadButton.disabled = false;
-                    console.error("Error en la solicitud:", error);
-                    console.error(xhr);
-                    console.error(status);
-                    document.getElementById('spinner').style.display = 'none';
-                }
-        });
-    });
-  </script>
 
   <script>
         const revisionModal = new bootstrap.Modal(document.getElementById('revisionModal'));
@@ -396,6 +295,87 @@
             const toast = new bootstrap.Toast(toastElement);
             document.getElementById('toastMessage').textContent = message;
             toast.show();
+        }
+    </script>
+
+    <script>
+        const recomendacionModal = new bootstrap.Modal(document.getElementById('recomendacionModal'));
+        
+        function showmodal(folio, param, index) {
+            document.getElementById('folioSpan').textContent = folio;
+            document.getElementById('paramRecom').value = param;
+            document.getElementById('rowIndex').value = index;
+            document.getElementById('observacionesRecom').value = '';
+            document.querySelector('#recomendacionModal button.btn-primary').disabled = false;
+            document.getElementById('avalSi').checked = false;
+            document.getElementById('avalNo').checked = false;
+            document.getElementById('advertenciaLabel').style.display = 'none';
+            recomendacionModal.show();
+        }
+
+        function guardarTerminacion() {
+            console.log('guardarTerminacion');
+
+            const submitButton = document.querySelector('#recomendacionModal button.btn-primary');
+            submitButton.disabled = true;
+            document.getElementById('spinnerRecom').style.display = 'block';
+
+            const observaciones = document.getElementById('observacionesRecom').value;
+            const avalOption = document.querySelector('input[name="avalOption"]:checked');
+            
+            if (!avalOption) {
+                const advertenciaLabel = document.getElementById('advertenciaLabel');
+                advertenciaLabel.textContent = "Debe seleccionar si avala o no avala";
+                advertenciaLabel.style.display = 'block';
+                submitButton.disabled = false;
+                document.getElementById('spinnerRecom').style.display = 'none';
+                return;
+            }
+
+            if (!observaciones.trim()) {
+                const advertenciaLabel = document.getElementById('advertenciaLabel');
+                advertenciaLabel.textContent = "Debe agregar observaciones";
+                advertenciaLabel.style.display = 'block';
+                submitButton.disabled = false;
+                document.getElementById('spinnerRecom').style.display = 'none';
+                return;
+            }
+
+            const param = document.getElementById('paramRecom').value;
+            const formData = new FormData();
+            formData.append('observaciones', observaciones);
+            formData.append('param', param);
+            formData.append('aval', avalOption.value);
+
+            $.ajax({
+                url: '/evalua/guardarTerminacion',
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.status === 1) {
+                        const rowIndex = document.getElementById('rowIndex').value;
+                        const row = document.getElementById('renglon_' + rowIndex);
+                        row.remove();
+                        showToast("Cambio a terminado realizado con éxito");
+                        recomendacionModal.hide();
+                    } else {
+                        showToast("Error: " + response.mensaje);
+                        submitButton.disabled = false;
+                    }
+                    document.getElementById('spinnerRecom').style.display = 'none';
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error en la solicitud:", error);
+                    showToast("Error al procesar la solicitud");
+                    submitButton.disabled = false;
+                    document.getElementById('spinnerRecom').style.display = 'none';
+                }
+            });
         }
     </script>
 

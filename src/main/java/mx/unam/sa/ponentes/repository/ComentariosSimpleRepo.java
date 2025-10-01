@@ -14,4 +14,5 @@ public interface ComentariosSimpleRepo extends JpaRepository<ComentariosSimple, 
 
     List<ComentariosSimple> findByidUserNotAndIdRespCuestionarioAndIdTemaOrderByFecRegAsc(Integer idUser, Long idResp,
             Long idTema);
+
 }

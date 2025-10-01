@@ -103,6 +103,28 @@ public class RespEvaluadorService {
         }
     }
 
+    
+    public Resp_revision saveRespEvaluador(Long idRespCuestionario, String observaciones, String username) {
+
+        try {
+            RespCuestionario respCuestionario = respuestaService.findRespCuestionarioById(idRespCuestionario);
+            
+            Resp_revision respEvaluador = new Resp_revision();
+            respEvaluador.setRespCuestionario(respCuestionario);
+            respEvaluador.setObservaciones(observaciones);
+            respEvaluador.setUser(username);
+            respEvaluador.setNumRespuesta(1);
+            respEvaluador.setStatus(1);
+            respEvaluador = respEvaluadorRepo.save(respEvaluador);
+
+            return respEvaluador;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
     public List<RespEvaluadorDTO> findByRespCuestionarioStatus_1_2_4(Long idRespCuestionario) {
         List<RespEvaluadorDTO> salida = null;
 

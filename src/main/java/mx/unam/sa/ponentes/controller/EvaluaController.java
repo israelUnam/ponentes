@@ -85,8 +85,8 @@ public class EvaluaController {
         cuestionarios.stream().forEach(c -> {
             c.setCapturados(respCuestionarioRepo.countByCuestionarioIdCuestionarioAndStatus(c.getId(), 1));
             c.setEvaluados(respCuestionarioRepo.countByCuestionarioIdCuestionarioAndStatus(c.getId(), 2));
-            c.setDictamenincompleto(respCuestionarioRepo.countByCuestionarioIdCuestionarioAndStatus(c.getId(), 3));
-            c.setTerminados(respCuestionarioRepo.countByCuestionarioIdCuestionarioAndStatus(c.getId(), 4));
+            c.setAvalados(respCuestionarioRepo.countByCuestionarioIdCuestionarioAndStatus(c.getId(), 4));
+            c.setNoAvalados(respCuestionarioRepo.countByCuestionarioIdCuestionarioAndStatus(c.getId(), 5));
             c.setParam(Utils.encode("idCuestionario=" + c.getId() + "&titulo=" + c.getTitulo() + "&subtitulo="
                     + c.getSubtitulo()));
         });
@@ -102,6 +102,15 @@ public class EvaluaController {
         model.addAttribute("email", principal.getAttribute("email"));
         model.addAttribute("picture", principal.getAttribute("picture"));
 
+        User user = userRepository.findByUsername(principal.getAttribute("email"))
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Boolean isAdmin = user.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+        Boolean isEval = user.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_EVAL"));
+
+        model.addAttribute("admin", isAdmin);
+
         Map<String, Object> params = Utils.getMapDecode(param);
 
         Long idCuestionario = Long.parseLong((String) params.get("idCuestionario"));
@@ -111,12 +120,6 @@ public class EvaluaController {
         } else if (tipo.equals("evalua")) {
             status = 2;
         }
-
-        User user = userRepository.findByUsername(principal.getAttribute("email"))
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Boolean isEval = user.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_EVAL"));
 
         List<CuestDetalleDTO> detalles = cuestionarioService.getDetalleCuestionario(idCuestionario, status,
                 "obs_evaluador_revision", true);
@@ -443,6 +446,55 @@ public class EvaluaController {
             return ResponseEntity.ok().body(new HashMap<String, Object>() {
                 {
                     put("mensaje", e.getMessage());
+                    put("status", 2);
+                }
+            });
+        }
+    }
+
+    @PostMapping("/guardarTerminacion")
+    public ResponseEntity<HashMap<String, Object>> guardarTerminacion(
+            @RequestParam String param,
+            @RequestParam String observaciones,
+            @RequestParam String aval,
+            @AuthenticationPrincipal OAuth2User principal) {
+
+        try {
+            User user = userRepository.findByUsername(principal.getAttribute("email"))
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            Boolean isEval = user.getAuthorities().stream()
+                    .anyMatch(authority -> authority.getAuthority().equals("ROLE_EVAL"));
+
+            if (!isEval) {
+                throw new RuntimeException("No tienes permisos para realizar esta acción");
+            }
+
+            // Decode param to get idRespCuestionario
+            Map<String, Object> entrada = Utils.getMapDecode(param);
+            Long idResp = Long.parseLong(entrada.get("idRespCuestionario").toString());
+
+            // Update status based on aval value
+            int nuevoStatus = "1".equals(aval) ? 4 : 5; // 4=Avalado, 5=No avalado
+
+            // Save observations and update status
+            respuestaService.cambiarStatusRespuesta(idResp, nuevoStatus);
+
+            // Save evaluator observations
+            respEvaluadorService.saveRespEvaluador(idResp, observaciones, user.getUsername());
+
+
+            return ResponseEntity.ok().body(new HashMap<String, Object>() {
+                {
+                    put("mensaje", "Terminación guardada exitosamente");
+                    put("status", 1);
+                }
+            });
+
+        } catch (Exception e) {
+            return ResponseEntity.ok().body(new HashMap<String, Object>() {
+                {
+                    put("mensaje", "Error: " + e.getMessage());
                     put("status", 2);
                 }
             });

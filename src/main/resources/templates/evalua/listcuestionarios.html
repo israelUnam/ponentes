@@ -52,12 +52,17 @@
                                 </a>
                             </td>
 
-                            <td style="text-align: center;"> 
-                            <a th:href="@{'/terminado/listterminado?param=' + ${cuestionario.param}}" style="display: block ruby;">
-                                <button  class="btn btn-primary rounded-circle d-grid justify-content-center" style="width: 20px; height: 20px; align-content: center;">
-                                <span th:text="${cuestionario.terminados}" th:id="@{'eval_' + ${index.count}}" >  </span>
-                                </button>
-                            </a>
+                            <td style="text-align: center;display: flex;justify-content: space-around;"> 
+                                <a th:href="@{'/terminado/listterminado?param=' + ${cuestionario.param}} + '&terminado=true'" style="display: block ruby;">
+                                    <button  class="btn btn-primary rounded-circle d-grid justify-content-center" style="width: 20px; height: 20px; align-content: center;">
+                                    <span th:text="${cuestionario.avalados}" th:id="@{'eval_' + ${index.count}}" >  </span>
+                                    </button>
+                                </a>
+                                <a th:href="@{'/terminado/listterminado?param=' + ${cuestionario.param}} + '&terminado=false'" style="display: block ruby;">
+                                    <button  class="btn btn-primary rounded-circle d-grid justify-content-center" style="width: 20px; height: 20px; align-content: center;">
+                                    <span th:text="${cuestionario.noAvalados}" th:id="@{'eval_' + ${index.count}}" >  </span>
+                                    </button>
+                                </a>
                             </td>
                         
                             <td style="text-align: center;" th:if="${isEval}">

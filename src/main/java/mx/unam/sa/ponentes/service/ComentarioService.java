@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import mx.unam.sa.ponentes.dto.ComentariosDTO;
 import mx.unam.sa.ponentes.models.ComentariosSimple;
-import mx.unam.sa.ponentes.models.User;
 import mx.unam.sa.ponentes.repository.ComentariosSimpleRepo;
 import mx.unam.sa.ponentes.utils.Utils;
 
@@ -37,4 +36,5 @@ public class ComentarioService {
         }).collect(Collectors.toList());
         return comentarios;
     }
+
 }

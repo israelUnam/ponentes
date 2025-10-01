@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta th:name="_csrf" th:content="${_csrf.token}" />
+    <title>Cuestionarios - Universidad Nacional Autónoma de México</title>
+    <link rel="icon" type="image/x-icon" href="/images/cropped-favicon-1-150x150.jpg" />
+    <headers th:replace="~{components/headers.html :: ~{_headers}}" />
+    <script	src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>    
+  </head>
+<body id="cabecera">
+    <nav th:replace="~{components/nav.html :: ~{_nav}}" />
+    <!-- Page Header-->
+    <header class="masthead" style="background-image: url('/images/home-bg.jpg'); height: 125px;">
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <h3 class="text-center">Cuestionario: <span th:text="${titulo}"></span> - <span th:text="${subtitulo}"> </span></h3>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="text-center">
+
+                            <span th:text="${status == 4 ? 'Avalados' : 'No avalados'}"></span>
+                            
+                            <span th:text="${currentYear}"></span></h4>
+                    </div>
+                    <div class="col-md-6">
+
+                        <div class="row">
+                            <div class="col-md-6" style="text-align: right;">
+                                <label for="yearDropdown" class="form-label">Consulta años anteriores:</label>
+                            </div>
+                            <div class="col-md-6">
+                                <select id="yearDropdown" class="form-select" aria-label="Year select">
+                                    <option th:each="year : ${anios}" th:value="${year}" th:selected="${currentYear == year}" th:text="${year}" th:onclick="|cambiaAnio(${year})|"></option>
+                                    <!--option value="2024" th:selected="${currentYear == 2024}" onclick="cambiaAnio(2024)">2024</!--option-->
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+              
+              
+
+              <div class="accordion" id="accordionExample">
+                <div class="accordion-item" th:each="detalle, index: ${detalles}" >
+                  <h2 class="accordion-header" th:id="@{'heading' + ${detalle.idRespCuestionario}}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                    th:id="@{'acordion_' + ${detalle.idRespCuestionario}}"
+                    th:data-bs-target="@{'#collapse' + ${detalle.idRespCuestionario}}" aria-expanded="false" 
+                    th:aria-controls="@{'collapse' + ${detalle.idRespCuestionario}}" th:onclick="muestraDetalle([[${detalle.idRespCuestionario}]],[[${detalle.param}]])">
+                        Folio: <span th:text="${detalle.folio}"></span>&nbsp Usuario: <span th:text="${detalle.usuario}"></span> &nbsp; Fecha de Captura: <span th:text="${detalle.fechaCaptura}"></span>
+                    </button>
+                  </h2>
+                  <div th:id="@{'collapse' + ${detalle.idRespCuestionario}}" class="accordion-collapse collapse" th:aria-labelledby="@{'heading' + ${detalle.idRespCuestionario}}" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <p><a th:href="@{'/evalua/evaluasolicitud?param=' + ${detalle.param}}" target="_blank"> Captura Inicial y comentarios</a></p>
+                      <p></p>
+                      <p>Observaciones</p>
+                      <div th:id="@{'spinner_' + ${detalle.idRespCuestionario}}" class="text-center d-none">
+                        <div class="spinner-border text-primary" role="status">
+                          <span class="visually-hidden">Cargando...</span>
+                        </div>
+                      </div>
+                      <div th:id="@{'observa_' + ${detalle.idRespCuestionario}}"> </div>
+                      <input type="hidden" th:id="@{'carga_' + ${detalle.idRespCuestionario}}" value="0" />
+
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+
+            </div>
+
+            <div style="text-align: center;">
+                <a href="/evalua/listcuestionarios" class="btn btn-primary"> regresar</a>
+            </div>
+        </div>            
+
+    <!-- Footer-->
+    <foot th:replace="~{components/footer.html :: ~{_footer}}" />
+    <script>
+        function cambiaAnio(anio) {
+            console.log("cambiaAnio 2: " + anio);
+            const urlParams = new URLSearchParams(window.location.search);
+            const param = urlParams.get('param');
+            console.log("param: " + param);
+            window.location.href = "/terminado/listterminado?param=" + param +"&anio=" + anio;
+
+        }
+
+      function muestraDetalle(idResp, param) {
+          console.log("muestraDetalle: " + idResp + " - " + param);
+          //Evita la carga de la información si ya se cargo
+          let valor = document.getElementById("carga_" + idResp).value;
+          console.log("valor: " + valor);
+          if (valor == 0) {
+              // Show spinner
+              document.getElementById("spinner_" + idResp).classList.remove("d-none");
+              
+              $.ajax({
+                  type: "POST",
+                  url: "/recomendacionRest/getObservaciones",
+                  data: {param: param},
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content')
+                  }, 
+                  success: function(data) {
+                      // Hide spinner
+                      document.getElementById("spinner_" + idResp).classList.add("d-none");
+                      let respEvaluador = data.respEvaluador;
+                      //Limpia div de comentarios cargados anteriormente
+                      document.getElementById("observa_" + idResp).innerHTML = "";
+                      respEvaluador.forEach(function(resp) {
+                          //console.log("resp: ", resp);
+                            let divCar = "<div class='card'>";
+                            if(resp.status === 1){    
+                                divCar += "<div class='card-header' style='background-color:azure;'>";
+                                divCar +=    "Observación <i>" + resp.fecReg + "</i> - Sub-comité de Evaluación";
+                            }
+                            else if(resp.status === 2){
+                                divCar += "<div class='card-header' style='background-color:#cfe2ff;'>";
+                                divCar +=    "Respuesta <i>" + resp.fecReg + "</i> - Responsable de proyecto";
+                            }
+                            else if(resp.status === 3){
+                                divCar += "<div class='card-header' style='background-color:#d3d3d3;'>";
+                                divCar +=    "Comentario <i>" + resp.fecReg + "</i> - Sólo Comité de Evaluación";
+                            }
+                            else if(resp.status === 4){
+                                divCar += "<div class='card-header' style='background-color:#05dc19;'>";
+                                divCar +=    "Respuesta Final <i>" + resp.fecReg + "</i> - Comité de Evaluación";
+                            }
+                          
+
+                          divCar +=  "</div>"; 
+                          divCar +=  "<div class='card-body'>";
+                          divCar +=  "<p class='card-text'>" + resp.observaciones + "</p>" ;
+
+                          resp.documentos.forEach(function(doc) {
+                              divCar += "<a href='" + doc.value + "' target='_blank'>" + doc.key + "</a><br>";
+                          });    
+
+                          divCar +=  "</div>";
+                          divCar +=  "</div><br>";
+
+                          document.getElementById("observa_" + idResp).innerHTML += divCar;
+                      });
+                  },
+                  error: function(e) {
+                      console.log("Error: " + e);
+                  }
+              });
+
+              document.getElementById("carga_" + idResp).value = 1;
+          }            
+      }
+    </script>  
+</body>
+</html>
